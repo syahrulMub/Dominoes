@@ -2,16 +2,17 @@ namespace Dominoes;
 
 public class Player : IPlayer
 {
-    private string _name;
     private int _id;
-
-    public Player(string name, int id)
+    private string? _name;
+    int IPlayer.GetID()
     {
-        _name = name;
-        _id = id;
+        return _id;
     }
-
-    public bool SetID(int id)
+    string? IPlayer.GetName()
+    {
+        return _name;
+    }
+    bool IPlayer.SetID(int id)
     {
         if (id != 0)
         {
@@ -23,10 +24,9 @@ public class Player : IPlayer
             return false;
         }
     }
-
-    public bool SetName(string name)
+    bool IPlayer.SetName(string? name)
     {
-        if (name != null)
+        if (name?.Length >= 2)
         {
             _name = name;
             return true;
@@ -36,15 +36,4 @@ public class Player : IPlayer
             return false;
         }
     }
-
-    public int GetID()
-    {
-        return _id;
-    }
-
-    public string GetName()
-    {
-        return _name;
-    }
-
 }

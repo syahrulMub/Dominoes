@@ -1,28 +1,37 @@
 namespace Dominoes;
 
-public class Tile
+public class Tile : ITile
 {
     private int _sideA;
     private int _sideB;
+    private Position? _position;
 
     public Tile(int sideA, int sideB)
     {
-        SetTilesValue(sideA, sideB);
+        SetTileValue(sideA, sideB);
     }
 
-    public int GetTilessideA()
+    public int GetTilesideA()
     {
         return _sideA;
     }
-    public int GetTilesSideB()
+    public int GetTileSideB()
     {
         return _sideB;
     }
-    public void SetTilesValue(int sideA, int sideB)
+    public bool SetTileValue(int sideA, int sideB)
     {
-        _sideA = sideA;
-        _sideB = sideB;
-
+        if (sideA >= 0 && sideB >= 0)
+        {
+            _sideB = sideB;
+            _sideA = sideA;
+            return true;
+        }
+        return false;
+    }
+    public Position? GetPosition()
+    {
+        return _position;
     }
     public override string ToString()
     {
