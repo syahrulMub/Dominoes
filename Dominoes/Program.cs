@@ -19,7 +19,7 @@ class Program
         game1.AddPlayer(player1);
         game1.AddPlayer(player2);
 
-        List<List<int>> availableBoneyard = boneyard.tilesOnBoneyard;
+        List<List<int>>? availableBoneyard = boneyard.tilesOnBoneyard;
 
         game1.GenerateTiles(player1, 8);
         game1.GenerateTiles(player2, 8);

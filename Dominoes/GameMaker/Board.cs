@@ -4,6 +4,7 @@ public class Board : IBoard
 {
     private int _sizeX;
     private int _sizeY;
+    private List<Tile>? _tilesOnBoard;
     public int GetSizeX()
     {
         return _sizeX;
@@ -21,5 +22,13 @@ public class Board : IBoard
             return true;
         }
         return false;
+    }
+    public void SetTilesOnBoard(Tile tile)
+    {
+        _tilesOnBoard?.Add(tile);
+    }
+    public List<Tile>? getTilesOnBoard()
+    {
+        return _tilesOnBoard;
     }
 }

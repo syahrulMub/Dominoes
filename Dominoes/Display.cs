@@ -16,7 +16,7 @@ public class Display
     {
         foreach (var tile in tiles)
 
-            Console.Write($"{tile.GetTilesideA()}|{tile.GetTileSideB()} ");
+            Console.Write($"{tile.GetTileSideA()}|{tile.GetTileSideB()} ");
     }
 }
 

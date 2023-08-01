@@ -4,7 +4,7 @@ namespace Dominoes;
 public class Boneyard
 {
     public List<List<int>>? tilesOnBoneyard;
-    public int? totalSide;
+    public int totalSide;
 
     public Boneyard(int totalSide)
     {
@@ -13,7 +13,6 @@ public class Boneyard
         CreateDominoTiles();
         ShuffleTiles();
     }
-
     public Boneyard()
     {
 

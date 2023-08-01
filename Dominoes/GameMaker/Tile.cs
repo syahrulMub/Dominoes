@@ -11,7 +11,7 @@ public class Tile : ITile
         SetTileValue(sideA, sideB);
     }
 
-    public int GetTilesideA()
+    public int GetTileSideA()
     {
         return _sideA;
     }
@@ -37,17 +37,22 @@ public class Tile : ITile
     {
         return $"{_sideA}|{_sideB}";
     }
+
+    public static implicit operator Tile(TileOriantation v)
+    {
+        throw new NotImplementedException();
+    }
 }
 
-// public enum TileOriantation
-// {
-//     vertical,
-//     horizontal
-// }
+public enum TileOriantation
+{
+    vertical,
+    horizontal
+}
 
-// public enum TilePoint
-// {
-//     BottomSide,
-//     Middle,
-//     TopSide
-// }
+public enum TilePoint
+{
+    BottomSide,
+    Middle,
+    TopSide
+}
