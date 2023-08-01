@@ -8,7 +8,7 @@ public class Boneyard
 
     public Boneyard(int totalSide)
     {
-        tilesOnBoneyard ??= new List<List<int>>();
+        tilesOnBoneyard = new List<List<int>>();
         this.totalSide = totalSide;
         CreateDominoTiles();
         ShuffleTiles();

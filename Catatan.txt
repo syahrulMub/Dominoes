@@ -1,0 +1,15 @@
+02/08/2023
+
+1. mencoba menambah logika untuk valid move
+yang terdiri dari
+a. UpdateValidSide() yang akan mengisi List<int> untuk angka yang valid untuk diisi (updatable)
+b. IsValidMove() yang akan dijalankan dan menentukan valid move selanjutnya, IsValidMove akan menambah
+List<Tile> di variable _tileOnBoard
+
+**kekurangan**
+a. baru bisa menambahkan keadaan misal first tile adalah horizontal
+b. belum menambahkan keadaan misal first side vertical
+c. keadaan yang valid masih 2, dari permainan dominoes keadaan valid yang paling banyak adalah 4.
+c. belum bisa menentukan tiles di middle side
+d. pembatasan board apakah penting? karena bisa mengubah semua kode yang telah saya buat (mungkin)
+karena saya sudah menentukan vertical dan horizontalnya.

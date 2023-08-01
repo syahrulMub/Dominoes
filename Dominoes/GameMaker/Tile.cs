@@ -4,7 +4,7 @@ public class Tile : ITile
 {
     private int _sideA;
     private int _sideB;
-    private Position? _position;
+    private TileOrientation _orientation;
 
     public Tile(int sideA, int sideB)
     {
@@ -29,22 +29,27 @@ public class Tile : ITile
         }
         return false;
     }
-    public Position? GetPosition()
-    {
-        return _position;
-    }
     public override string ToString()
     {
         return $"{_sideA}|{_sideB}";
     }
-
-    public static implicit operator Tile(TileOriantation v)
+    public bool SetTileOrientation(TileOrientation orientation)
     {
-        throw new NotImplementedException();
+        if (TileOrientation.horizontal == orientation || TileOrientation.vertical == orientation)
+        {
+            _orientation = orientation;
+            return true;
+        }
+        return false;
     }
+    public TileOrientation GetTileOrientation()
+    {
+        return _orientation;
+    }
+
 }
 
-public enum TileOriantation
+public enum TileOrientation
 {
     vertical,
     horizontal
