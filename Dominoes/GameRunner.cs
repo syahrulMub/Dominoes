@@ -10,7 +10,7 @@ public class GameRunner
     public Dictionary<IPlayer, List<Tile>> _playersResource;
     private Board _board;
     public Boneyard _boneyard;
-    private IPlayer _currentPlayer;
+    private IPlayer? _currentPlayer;
     private List<int> _validSideTiles;
     private List<Tile> _tileOnBoard;
 
@@ -21,7 +21,7 @@ public class GameRunner
         _playersResource = new Dictionary<IPlayer, List<Tile>>();
         _board = new Board();
         _boneyard = new Boneyard();
-        _currentPlayer = _players[0];
+        _currentPlayer = null;
         _validSideTiles = new List<int>();
         _tileOnBoard = new List<Tile>();
     }
@@ -34,7 +34,6 @@ public class GameRunner
         _boneyard = new Boneyard();
         _validSideTiles = new List<int>();
         _tileOnBoard = new List<Tile>();
-        _currentPlayer = _players[0];
 
     }
 
@@ -101,6 +100,8 @@ public class GameRunner
     {
         return _currentPlayer;
     }
+    //
+
     //method for insert tile on board
     public bool MakeMove(Tile tile)
     {
@@ -110,9 +111,6 @@ public class GameRunner
             //logic for first input
             if (FirstValidMove(tile))
             {
-                _tileOnBoard.Add(tile);
-                _validSideTiles.Add(tile.GetTileSideA());
-                _validSideTiles.Add(tile.GetTileSideB());
                 currentPlayerTiles.Remove(tile);
                 MoveToNextPlayer();
                 return true;
@@ -120,9 +118,36 @@ public class GameRunner
             //logic for nextmove
             else if (!FirstValidMove(tile))
             {
-                IsValidMove(tile);
-                MoveToNextPlayer();
-                return true;
+                //method for validside last index right
+                if (RightValidSide(tile))
+                {
+                    if (tile.GetTileSideA() == tile.GetTileSideB())
+                    {
+                        tile.SetTileOrientation(TileOrientation.vertical);
+                    }
+                    else if (tile.GetTileSideA() != tile.GetTileSideB())
+                    {
+                        tile.SetTileOrientation(TileOrientation.horizontal);
+                    }
+                    currentPlayerTiles.Remove(tile);
+                    MoveToNextPlayer();
+                    return true;
+                }
+                //method for validside 0 index left
+                else if (LeftValidSide(tile))
+                {
+                    if (tile.GetTileSideA() == tile.GetTileSideB())
+                    {
+                        tile.SetTileOrientation(TileOrientation.vertical);
+                    }
+                    else if (tile.GetTileSideA() != tile.GetTileSideB())
+                    {
+                        tile.SetTileOrientation(TileOrientation.horizontal);
+                    }
+                    currentPlayerTiles.Remove(tile);
+                    MoveToNextPlayer();
+                    return true;
+                }
             }
         }
         return false;
@@ -136,57 +161,59 @@ public class GameRunner
             {
                 tile.SetTileOrientation(TileOrientation.vertical);
                 _tileOnBoard.Add(tile);
+                _validSideTiles.Add(tile.GetTileSideB());
+                _validSideTiles.Add(tile.GetTileSideA());
             }
             else
             {
                 tile.SetTileOrientation(TileOrientation.horizontal);
                 _tileOnBoard.Add(tile);
+                _validSideTiles.Add(tile.GetTileSideB());
+                _validSideTiles.Add(tile.GetTileSideA());
             }
             return true;
         }
         return false;
     }
-    public void UpdateValidTileSide()
+    private bool LeftValidSide(Tile thisTile)
     {
-        _validSideTiles.Clear();
-        int firstSide = _tileOnBoard[0].GetTileSideA();
-        int lastSide = _tileOnBoard[-1].GetTileSideB();
-
-        foreach (var tile in _playersResource[_currentPlayer])
+        if (thisTile.GetTileSideA() == _validSideTiles[0])
         {
-            int sideA = tile.GetTileSideA();
-            int sideB = tile.GetTileSideB();
-
-            if (sideA == firstSide || sideB == firstSide)
-            {
-                _validSideTiles.Add(sideA);
-            }
-            if (sideA == lastSide || sideB == lastSide)
-            {
-                _validSideTiles.Add(sideB);
-            }
+            _validSideTiles[0] = thisTile.GetTileSideB();
+            _tileOnBoard.Insert(0, thisTile);
+            return true;
         }
+        else if (thisTile.GetTileSideB() == _validSideTiles[0])
+        {
+            _validSideTiles[0] = thisTile.GetTileSideA();
+            _tileOnBoard.Insert(0, thisTile);
+            return true;
+        }
+        return false;
     }
-    public bool IsValidMove(Tile tile)
+    private bool RightValidSide(Tile thisTile)
     {
-        UpdateValidTileSide();
-        if (_validSideTiles.Count == 0)
+        if (thisTile.GetTileSideA() == _validSideTiles[1])
         {
-            return false;
+            _validSideTiles[1] = thisTile.GetTileSideB();
+            _tileOnBoard.Add(thisTile);
+            return true;
         }
-
-        if (_validSideTiles.Contains(tile.GetTileSideA()))
+        else if (thisTile.GetTileSideB() == _validSideTiles[1])
         {
-            tile.SetTileOrientation(TileOrientation.horizontal);
-            _tileOnBoard.Insert(0, tile);
+            _validSideTiles[1] = thisTile.GetTileSideA();
+            _tileOnBoard.Add(thisTile);
+            return true;
         }
-        else if (_validSideTiles.Contains(tile.GetTileSideB()))
-        {
-            tile.SetTileOrientation(TileOrientation.horizontal);
-            _tileOnBoard.Add(tile);
-        }
-        _playersResource[_currentPlayer].Remove(tile);
-        return true;
+        return false;
+    }
+    private bool TopValidSide(Tile Thistile)
+    {
+        throw new NotImplementedException();
+    }
+    private bool BottomValidSide(Tile Thistile)
+    {
+        throw new NotImplementedException();
     }
     protected void MoveToNextPlayer()
     {
@@ -203,5 +230,14 @@ public class GameRunner
     public Board GetBoard()
     {
         return _board;
+    }
+    public bool StartGame()
+    {
+        if (_board != null && _players != null && _boneyard != null && _playersResource != null)
+        {
+            _currentPlayer = _players[0];
+            return true;
+        }
+        return false;
     }
 }

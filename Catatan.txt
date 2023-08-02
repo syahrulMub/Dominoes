@@ -7,9 +7,17 @@ b. IsValidMove() yang akan dijalankan dan menentukan valid move selanjutnya, IsV
 List<Tile> di variable _tileOnBoard
 
 **kekurangan**
-a. baru bisa menambahkan keadaan misal first tile adalah horizontal
-b. belum menambahkan keadaan misal first side vertical
-c. keadaan yang valid masih 2, dari permainan dominoes keadaan valid yang paling banyak adalah 4.
-c. belum bisa menentukan tiles di middle side
-d. pembatasan board apakah penting? karena bisa mengubah semua kode yang telah saya buat (mungkin)
+1. baru bisa menambahkan keadaan misal first tile adalah horizontal // **solved**
+2. belum menambahkan keadaan misal first side vertical //**solved**
+3. keadaan yang valid masih 2, dari permainan dominoes keadaan valid yang paling banyak adalah 4.
+4. belum bisa menentukan tiles di middle side
+5. pembatasan board apakah penting? karena bisa mengubah semua kode yang telah saya buat (mungkin)
 karena saya sudah menentukan vertical dan horizontalnya.
+
+03 / 08 / 2023
+1. mengganti logika untuk valid move setiap Rights dan left move
+
+**kekurangan 
+1. masih seperti tanggal 02 / 08 / 2023 yang belum solved
+2. belum menambah logic dan penambahan List<int> untuk kapan vertical tile itu valid untuk diisi
+3. kurang menambahkan untuk valid TopSide dan Buttom Side

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System;
 using Dominoes;
 
 class Program
@@ -21,8 +22,8 @@ class Program
 
         List<List<int>>? availableBoneyard = boneyard.tilesOnBoneyard;
 
-        game1.GenerateTiles(player1, 8);
-        game1.GenerateTiles(player2, 8);
+        game1.GenerateTiles(player1, 2);
+        game1.GenerateTiles(player2, 2);
 
         List<Tile> player1Tiles = game1.GetPlayerTiles(player1);
         List<Tile> player2Tiles = game1.GetPlayerTiles(player2);
@@ -36,5 +37,9 @@ class Program
         Console.WriteLine();
 
         Display.DisplayBoneyard(availableBoneyard);
+        game1.StartGame();
+
+
+        Console.ReadLine();
     }
 }
