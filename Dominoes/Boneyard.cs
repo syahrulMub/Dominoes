@@ -60,10 +60,14 @@ public class Boneyard
     }
     public bool RemoveData(List<int> data)
     {
-        if (tilesOnBoneyard.Contains(data))
+        if (tilesOnBoneyard != null)
         {
-            tilesOnBoneyard.Remove(data);
-            return true;
+            if (tilesOnBoneyard.Contains(data))
+            {
+                tilesOnBoneyard.Remove(data);
+                return true;
+            }
+            return false;
         }
         return false;
     }

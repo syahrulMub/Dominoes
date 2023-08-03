@@ -7,9 +7,9 @@ public class GameRunner
 
     //variabel that game runner needed
     private List<IPlayer> _players;
-    public Dictionary<IPlayer, List<Tile>> _playersResource;
+    private Dictionary<IPlayer, List<Tile>> _playersResource;
     private Board _board;
-    public Boneyard _boneyard;
+    private Boneyard _boneyard;
     private IPlayer? _currentPlayer;
     private List<int> _validSideTiles;
     private List<Tile> _tileOnBoard;
@@ -20,8 +20,8 @@ public class GameRunner
         _players = new List<IPlayer>();
         _playersResource = new Dictionary<IPlayer, List<Tile>>();
         _board = new Board();
-        _boneyard = new Boneyard();
         _currentPlayer = null;
+        _boneyard = new Boneyard();
         _validSideTiles = new List<int>();
         _tileOnBoard = new List<Tile>();
     }
@@ -148,7 +148,9 @@ public class GameRunner
                     MoveToNextPlayer();
                     return true;
                 }
+                return false;
             }
+            return false;
         }
         return false;
     }
@@ -215,7 +217,7 @@ public class GameRunner
     {
         throw new NotImplementedException();
     }
-    protected void MoveToNextPlayer()
+    public void MoveToNextPlayer()
     {
         int currentPLayerIndex = _players.IndexOf(_currentPlayer);
         if (currentPLayerIndex >= 0 && currentPLayerIndex < _players.Count - 1)
@@ -231,12 +233,24 @@ public class GameRunner
     {
         return _board;
     }
-    public bool StartGame()
+    public List<Tile> GetTileOnBoard()
     {
-        if (_board != null && _players != null && _boneyard != null && _playersResource != null)
+        return _tileOnBoard;
+    }
+    public bool IsEnded()
+    {
+        if (_board == null || _players == null || _boneyard == null || _playersResource == null)
         {
-            _currentPlayer = _players[0];
-            return true;
+            return false;
+        }
+
+        _currentPlayer = _players[0];
+        foreach (var playerTile in _playersResource.Values)
+        {
+            if (playerTile.Count == 0)
+            {
+                return true;
+            }
         }
         return false;
     }

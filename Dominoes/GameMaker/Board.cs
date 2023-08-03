@@ -23,8 +23,17 @@ public class Board : IBoard
         }
         return false;
     }
-    public List<Tile>? getTilesOnBoard()
+    public List<Tile>? GetTilesOnBoard()
     {
         return _tilesOnBoard;
+    }
+    public bool SetTilesOnBoard(Tile tile)
+    {
+        if (_tilesOnBoard != null)
+        {
+            _tilesOnBoard.Add(tile);
+            return true;
+        }
+        return false;
     }
 }
