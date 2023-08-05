@@ -46,7 +46,7 @@ public class Boneyard
         }
         return false;
     }
-    public List<int> GetTileData()
+    public List<int>? GetTileData()
     {
         if (tilesOnBoneyard?.Count > 0)
         {
@@ -55,7 +55,7 @@ public class Boneyard
         }
         else
         {
-            throw new InvalidOperationException("Boneyard notyet create");
+            return null;
         }
     }
     public bool RemoveData(List<int> data)

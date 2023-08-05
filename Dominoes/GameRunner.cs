@@ -11,7 +11,7 @@ public class GameRunner
     private Board _board;
     private Boneyard _boneyard;
     private IPlayer? _currentPlayer;
-    private List<int> _validSideTiles;
+    public List<int> _validSideTiles;
     private List<Tile> _tileOnBoard;
 
     //constructor game runner
@@ -62,19 +62,22 @@ public class GameRunner
     //method for create domino tiles
     public bool GenerateTiles(IPlayer player, int count)
     {
-        if (_playersResource != null)
+        if (_boneyard.tilesOnBoneyard.Count >= count)
         {
-            for (int i = 0; i < count; i++)
+            if (_playersResource != null)
             {
-                foreach (var Player in _playersResource.Keys)
+                for (int i = 0; i < count; i++)
                 {
-                    if (player == Player && count != 0)
+                    foreach (var Player in _playersResource.Keys)
                     {
-                        List<int> tileData = _boneyard.GetTileData();
-                        int a = tileData[0];
-                        int b = tileData[1];
-                        _playersResource[player].Add(new Tile(a, b));
-                        _boneyard.RemoveData(tileData);
+                        if (player == Player && count != 0)
+                        {
+                            List<int> tileData = _boneyard.GetTileData();
+                            int a = tileData[0];
+                            int b = tileData[1];
+                            _playersResource[player].Add(new Tile(a, b));
+                            _boneyard.RemoveData(tileData);
+                        }
                     }
                 }
             }
@@ -219,14 +222,17 @@ public class GameRunner
     }
     public void MoveToNextPlayer()
     {
-        int currentPLayerIndex = _players.IndexOf(_currentPlayer);
-        if (currentPLayerIndex >= 0 && currentPLayerIndex < _players.Count - 1)
+        if (_currentPlayer != null)
         {
-            _currentPlayer = _players[currentPLayerIndex + 1];
-        }
-        else
-        {
-            _currentPlayer = _players[0];
+            int currentPLayerIndex = _players.IndexOf(_currentPlayer);
+            if (currentPLayerIndex >= 0 && currentPLayerIndex < _players.Count - 1)
+            {
+                _currentPlayer = _players[currentPLayerIndex + 1];
+            }
+            else
+            {
+                _currentPlayer = _players[0];
+            }
         }
     }
     public Board GetBoard()
@@ -239,17 +245,63 @@ public class GameRunner
     }
     public bool IsEnded()
     {
-        if (_board == null || _players == null || _boneyard == null || _playersResource == null)
+        _currentPlayer = _players[0];
+        if (_board == null || _players == null || _playersResource == null)
         {
             return false;
         }
+        if (GameEndWithZeroTile())
+        {
+            Console.WriteLine("Game end with 0 tile");
+            return true;
+        }
+        if (GameEndWithNoSameTiles())
+        {
+            Console.WriteLine("game End couse no same tile anymore");
+            return true;
+        }
+        return false;
 
-        _currentPlayer = _players[0];
+    }
+    private bool GameEndWithZeroTile()
+    {
         foreach (var playerTile in _playersResource.Values)
         {
             if (playerTile.Count == 0)
             {
                 return true;
+            }
+        }
+        return false;
+    }
+    private bool GameEndWithNoSameTiles()
+    {
+        if (_boneyard.tilesOnBoneyard.Count == 0)
+        {
+            foreach (var validTile in _validSideTiles)
+            {
+                bool anyPlayerValidTiles = false;
+                bool thisPlayerValidTiles = false;
+                foreach (var playerTile in _playersResource.Values)
+                {
+                    foreach (var tile in playerTile)
+                    {
+                        if (tile.GetTileSideA() == validTile || tile.GetTileSideB() == validTile)
+                        {
+                            thisPlayerValidTiles = true;
+                            break;
+                        }
+                    }
+                    if (thisPlayerValidTiles)
+                    {
+                        anyPlayerValidTiles = true;
+                        break;
+                    }
+                }
+                if (!anyPlayerValidTiles)
+                {
+                    return true;
+                }
             }
         }
         return false;
