@@ -20,7 +20,7 @@ class Program
         player3.SetName("oziel");
 
 
-        Boneyard boneyard = new Boneyard(6);
+        Boneyard boneyard = new Boneyard(7);
         game1.AddBondyard(boneyard);
         game1.AddPlayer(player1);
         game1.AddPlayer(player2);
@@ -28,16 +28,17 @@ class Program
 
         // Display.DisplayPlayerTiles(player1Tiles);
         // Display.DisplayPlayerTiles(player2Tiles);
+        Console.WriteLine(boneyard.tilesOnBoneyard.Count);
         if (boneyard.tilesOnBoneyard != null)
         {
             List<List<int>> availableBoneyard = boneyard.tilesOnBoneyard;
             Display.DisplayBoneyard(availableBoneyard);
         }
-        game1.GenerateTiles(player1, 7);
-        game1.GenerateTiles(player2, 7);
-        game1.GenerateTiles(player3, 7);
+        game1.GenerateTiles(player1, 12);
+        game1.GenerateTiles(player2, 12);
+        game1.GenerateTiles(player3, 12);
 
-        Console.WriteLine("===Game Start===");
+        Console.WriteLine("====Game Start====");
 
         while (!game1.IsEnded())
         {
@@ -127,13 +128,8 @@ class Program
             {
                 Console.WriteLine(validNumber);
             }
-            // Console.ReadKey();
-            // if (game1.IsEnded())
-            // {
-            //     break;
-            // }
         }
-        Display.DisplayBoard(game1.GetTileOnBoard());
+        // Display.DisplayBoard(game1.GetTileOnBoard());
         // Display.DisplayTilesOnBoard(game1.GetTileOnBoard());
     }
 }

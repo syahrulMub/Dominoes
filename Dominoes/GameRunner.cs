@@ -72,7 +72,7 @@ public class GameRunner
                     {
                         if (player == Player && count != 0)
                         {
-                            List<int> tileData = _boneyard.GetTileData();
+                            List<int>? tileData = _boneyard.GetTileData();
                             int a = tileData[0];
                             int b = tileData[1];
                             _playersResource[player].Add(new Tile(a, b));
@@ -212,6 +212,24 @@ public class GameRunner
         }
         return false;
     }
+    private bool ValidateTopAndButtomSide()
+    {
+        if (_tileOnBoard.Count <= 2)
+        {
+            return false;
+        }
+        foreach (var tile in _tileOnBoard)
+        {
+            if (tile.GetTileOrientation() == TileOrientation.vertical)
+            {
+                if (tile != _tileOnBoard[0] && tile != _tileOnBoard[-1])
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     private bool TopValidSide(Tile Thistile)
     {
         throw new NotImplementedException();
@@ -255,10 +273,18 @@ public class GameRunner
             Console.WriteLine("Game end with 0 tile");
             return true;
         }
-        if (GameEndWithNoSameTiles())
+        if (_boneyard.tilesOnBoneyard.Count == 0)
         {
-            Console.WriteLine("game End couse no same tile anymore");
-            return true;
+            foreach (var validTile in _validSideTiles)
+            {
+                if (GameEndWithNoSameTiles(validTile))
+                {
+                    Console.WriteLine("game End couse no same tile anymore");
+                    return true;
+                }
+                break;
+            }
+            return false;
         }
         return false;
 
@@ -274,35 +300,26 @@ public class GameRunner
         }
         return false;
     }
-    private bool GameEndWithNoSameTiles()
+    private bool GameEndWithNoSameTiles(int validTile)
     {
-        if (_boneyard.tilesOnBoneyard.Count == 0)
+        bool thisPlayerValidTiles = false;
+        foreach (var playerTile in _playersResource.Values)
         {
-            foreach (var validTile in _validSideTiles)
+            foreach (var tile in playerTile)
             {
-                bool anyPlayerValidTiles = false;
-                bool thisPlayerValidTiles = false;
-                foreach (var playerTile in _playersResource.Values)
+                if (tile.GetTileSideA() == validTile || tile.GetTileSideB() == validTile)
                 {
-                    foreach (var tile in playerTile)
-                    {
-                        if (tile.GetTileSideA() == validTile || tile.GetTileSideB() == validTile)
-                        {
-                            thisPlayerValidTiles = true;
-                            break;
-                        }
-                    }
-                    if (thisPlayerValidTiles)
-                    {
-                        anyPlayerValidTiles = true;
-                        break;
-                    }
-                }
-                if (!anyPlayerValidTiles)
-                {
-                    return true;
+                    thisPlayerValidTiles = true;
                 }
             }
+            if (thisPlayerValidTiles)
+            {
+                return false;
+            }
+        }
+        if (!thisPlayerValidTiles)
+        {
+            return true;
         }
         return false;
     }
