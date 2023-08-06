@@ -26,3 +26,8 @@ karena saya sudah menentukan vertical dan horizontalnya.
 1. check logic pada peraturan permainan kapan berakhir
 2. sudah bisa ketika semua pemain tidak memiliki kartu yang valid untuk side yang valid
 
+07 / 08 / 2023
+1. saya telah menemukan bugnya, pada perulangan for each ValidSide in _validSideTiles , sebenarnya perulangan
+tersebut tidak memberikan kesempatan untuk index[1], sehingga harus dijalankan secara terpisah
+dan ketika keduanya atau selanjutnya mengembalikan nilai true, maka jika semuanya true game akan berakhir.
+
