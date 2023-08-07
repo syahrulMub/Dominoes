@@ -13,7 +13,7 @@ public class Board : IBoard
     {
         return _sizeY;
     }
-    bool IBoard.SetBoard(int sizeX, int sizeY)
+    public bool SetBoard(int sizeX, int sizeY)
     {
         if (sizeX > 0 && sizeY > 0)
         {

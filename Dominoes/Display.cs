@@ -26,14 +26,14 @@ public class Display
         int i = 1;
         foreach (var tile in tiles)
         {
-            Console.WriteLine($"{i}Tile value : {tile.GetTileSideA()}|{tile.GetTileSideB()} Tile Orentation : {tile.GetTileOrientation()}");
+            Console.WriteLine($"{i}Tile value : {tile.GetTileSideA()}|{tile.GetTileSideB()} Tile Orentation : {tile.GetTileOrientation()} Position : {tile.GetTilePosition().GetPosX()}, {tile.GetTilePosition().GetPosY()}");
             i += 1;
         }
 
     }
     public static void DisplayBoard(List<Tile> tiles)
     {
-        int size = 30;
+        int size = 200;
         string[,] matrix = new string[size, size];
         for (int row = 0; row < size; row++)
         {
@@ -42,24 +42,24 @@ public class Display
                 matrix[row, columb] = " ";
             }
         }
-        int ax = 0;
-        int ay = 0;
-        int px = 0;
-        int py = 1;
-        int bx = 0;
-        int by = 2;
+        foreach (var tile in tiles)
+        {
+            Position position = tile.GetTilePosition();
+            int x = position.GetPosX();
+            int y = position.GetPosY();
+            if (tile.GetTileOrientation() == TileOrientation.horizontal)
+            {
 
-        if (tiles[0].GetTileOrientation() == TileOrientation.horizontal)
-        {
-            matrix[size / 2 + ax, size / 2 + ay] = $"{tiles[0].GetTileSideA()}";
-            matrix[size / 2 + px, size / 2 + py] = "|";
-            matrix[size / 2 + bx, size / 2 + by] = $"{tiles[0].GetTileSideB()}";
-        }
-        else if (tiles[0].GetTileOrientation() == TileOrientation.vertical)
-        {
-            matrix[size / 2 + ax, size / 2 + ay] = $"{tiles[0].GetTileSideA()}";
-            matrix[size / 2 + px, size / 2 + py] = "|";
-            matrix[size / 2 + bx, size / 2 + by] = $"{tiles[0].GetTileSideB()}";
+                matrix[y, x - 1] = $"{tile.GetTileSideA()}";
+                matrix[y, x] = $"|";
+                matrix[y, x + 1] = $"{tile.GetTileSideB()} ";
+            }
+            else if (tile.GetTileOrientation() == TileOrientation.vertical)
+            {
+                matrix[y + 1, x] = $"{tile.GetTileSideA()}";
+                matrix[y, x] = $"-";
+                matrix[y - 1, x] = $"{tile.GetTileSideB()} ";
+            }
         }
 
         for (int row = 0; row < size; row++)

@@ -5,10 +5,12 @@ public class Tile : ITile
     private int _sideA;
     private int _sideB;
     private TileOrientation _orientation;
+    private Position _tilePosition;
 
     public Tile(int sideA, int sideB)
     {
         SetTileValue(sideA, sideB);
+        _tilePosition = new();
     }
 
     public int GetTileSideA()
@@ -25,6 +27,17 @@ public class Tile : ITile
         {
             _sideB = sideB;
             _sideA = sideA;
+            return true;
+        }
+        return false;
+    }
+    public bool FlipTiles()
+    {
+        if (_sideA >= 0 && _sideB >= 0)
+        {
+            int temp = _sideA;
+            _sideA = _sideB;
+            _sideB = temp;
             return true;
         }
         return false;
@@ -46,18 +59,12 @@ public class Tile : ITile
     {
         return _orientation;
     }
-
-}
-//berbeda di class
-public enum TileOrientation
-{
-    vertical,
-    horizontal
-}
-
-public enum TilePoint
-{
-    BottomSide,
-    Middle,
-    TopSide
+    public Position? GetTilePosition()
+    {
+        return _tilePosition;
+    }
+    public void SetTilePosition(int x, int y)
+    {
+        _tilePosition.SetPosition(x, y);
+    }
 }

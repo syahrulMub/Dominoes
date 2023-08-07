@@ -14,7 +14,6 @@ public class Position
         }
         return false;
     }
-
     public int GetPosX()
     {
         return _posX;

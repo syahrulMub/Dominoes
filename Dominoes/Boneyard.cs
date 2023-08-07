@@ -4,12 +4,12 @@ namespace Dominoes;
 public class Boneyard
 {
     public List<List<int>>? tilesOnBoneyard;
-    public int totalSide;
+    private int _totalSide;
 
     public Boneyard(int totalSide)
     {
         tilesOnBoneyard = new List<List<int>>();
-        this.totalSide = totalSide;
+        _totalSide = totalSide;
         CreateDominoTiles();
         ShuffleTiles();
     }
@@ -19,9 +19,9 @@ public class Boneyard
     }
     protected void CreateDominoTiles()
     {
-        for (int sideA = 0; sideA <= totalSide; sideA++)
+        for (int sideA = 0; sideA <= _totalSide; sideA++)
         {
-            for (int sideB = sideA; sideB <= totalSide; sideB++)
+            for (int sideB = sideA; sideB <= _totalSide; sideB++)
             {
                 List<int> tile = new List<int> { sideB, sideA };
                 tilesOnBoneyard?.Add(tile);

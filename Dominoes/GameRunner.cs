@@ -59,6 +59,15 @@ public class GameRunner
         }
         return false;
     }
+    public bool AddBoard(Board board)
+    {
+        if (board != null)
+        {
+            _board = board;
+            return true;
+        }
+        return false;
+    }
     //method for create domino tiles
     public bool GenerateTiles(IPlayer player, int count)
     {
@@ -94,6 +103,10 @@ public class GameRunner
         }
         return false;
     }
+    public List<IPlayer> GetPlayers()
+    {
+        return _players;
+    }
     //method for access every players tiles
     public List<Tile> GetPlayerTiles(IPlayer player)
     {
@@ -103,7 +116,6 @@ public class GameRunner
     {
         return _currentPlayer;
     }
-    //
 
     //method for insert tile on board
     public bool MakeMove(Tile tile)
@@ -119,7 +131,7 @@ public class GameRunner
                 return true;
             }
             //logic for nextmove
-            else if (!FirstValidMove(tile))
+            else if (!FirstValidMove(tile) && _tileOnBoard != null)
             {
                 //method for validside last index right
                 if (RightValidSide(tile))
@@ -164,6 +176,7 @@ public class GameRunner
         {
             if (tile.GetTileSideA() == tile.GetTileSideB())
             {
+                tile.SetTilePosition(_board.GetSizeX() / 2, _board.GetSizeY() / 2);
                 tile.SetTileOrientation(TileOrientation.vertical);
                 _tileOnBoard.Add(tile);
                 _validSideTiles.Add(tile.GetTileSideB());
@@ -171,10 +184,11 @@ public class GameRunner
             }
             else
             {
+                tile.SetTilePosition(15, 15);
                 tile.SetTileOrientation(TileOrientation.horizontal);
                 _tileOnBoard.Add(tile);
-                _validSideTiles.Add(tile.GetTileSideB());
                 _validSideTiles.Add(tile.GetTileSideA());
+                _validSideTiles.Add(tile.GetTileSideB());
             }
             return true;
         }
@@ -182,17 +196,23 @@ public class GameRunner
     }
     private bool LeftValidSide(Tile thisTile)
     {
-        if (thisTile.GetTileSideA() == _validSideTiles[0])
+        if (_tileOnBoard != null || _tileOnBoard.Count == 0)
         {
-            _validSideTiles[0] = thisTile.GetTileSideB();
-            _tileOnBoard.Insert(0, thisTile);
-            return true;
-        }
-        else if (thisTile.GetTileSideB() == _validSideTiles[0])
-        {
-            _validSideTiles[0] = thisTile.GetTileSideA();
-            _tileOnBoard.Insert(0, thisTile);
-            return true;
+            if (thisTile.GetTileSideA() == _validSideTiles[0])
+            {
+                thisTile.SetTilePosition(_tileOnBoard[0].GetTilePosition().GetPosX() - 3, _tileOnBoard[0].GetTilePosition().GetPosY());
+                _validSideTiles[0] = thisTile.GetTileSideB();
+                thisTile.FlipTiles();
+                _tileOnBoard.Insert(0, thisTile);
+                return true;
+            }
+            else if (thisTile.GetTileSideB() == _validSideTiles[0])
+            {
+                thisTile.SetTilePosition(_tileOnBoard[0].GetTilePosition().GetPosX() - 3, _tileOnBoard[0].GetTilePosition().GetPosY());
+                _validSideTiles[0] = thisTile.GetTileSideA();
+                _tileOnBoard.Insert(0, thisTile);
+                return true;
+            }
         }
         return false;
     }
@@ -200,13 +220,16 @@ public class GameRunner
     {
         if (thisTile.GetTileSideA() == _validSideTiles[1])
         {
+            thisTile.SetTilePosition(_tileOnBoard[_tileOnBoard.Count - 1].GetTilePosition().GetPosX() + 3, _tileOnBoard[_tileOnBoard.Count - 1].GetTilePosition().GetPosY());
             _validSideTiles[1] = thisTile.GetTileSideB();
             _tileOnBoard.Add(thisTile);
             return true;
         }
         else if (thisTile.GetTileSideB() == _validSideTiles[1])
         {
+            thisTile.SetTilePosition(_tileOnBoard[_tileOnBoard.Count - 1].GetTilePosition().GetPosX() + 3, _tileOnBoard[_tileOnBoard.Count - 1].GetTilePosition().GetPosY());
             _validSideTiles[1] = thisTile.GetTileSideA();
+            thisTile.FlipTiles();
             _tileOnBoard.Add(thisTile);
             return true;
         }
@@ -319,4 +342,18 @@ public class GameRunner
         return false;
     }
     //menentukan end game
+    public int PlayerTileCount(IPlayer player)
+    {
+        if (_playersResource[player] == null)
+        {
+            return 0;
+        }
+        int hasil = 0;
+        foreach (var tile in _playersResource[player])
+        {
+            hasil += tile.GetTileSideA();
+            hasil += tile.GetTileSideB();
+        }
+        return hasil;
+    }
 }

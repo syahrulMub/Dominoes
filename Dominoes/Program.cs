@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System;
-namespace Dominoes;
+using Dominoes;
 
 class Program
 {
@@ -20,8 +20,12 @@ class Program
         player3.SetName("oziel");
 
 
-        Boneyard boneyard = new Boneyard(7);
+        Boneyard boneyard = new Boneyard(5);
+        Board board = new Board();
+        board.SetBoard(50, 50);
+
         game1.AddBondyard(boneyard);
+        game1.AddBoard(board);
         game1.AddPlayer(player1);
         game1.AddPlayer(player2);
         game1.AddPlayer(player3);
@@ -34,9 +38,9 @@ class Program
             List<List<int>> availableBoneyard = boneyard.tilesOnBoneyard;
             Display.DisplayBoneyard(availableBoneyard);
         }
-        game1.GenerateTiles(player1, 12);
-        game1.GenerateTiles(player2, 12);
-        game1.GenerateTiles(player3, 12);
+        game1.GenerateTiles(player1, 4);
+        game1.GenerateTiles(player2, 4);
+        game1.GenerateTiles(player3, 4);
 
         Console.WriteLine("====Game Start====");
 
@@ -131,6 +135,11 @@ class Program
             Console.ReadKey();
         }
         // Display.DisplayBoard(game1.GetTileOnBoard());
-        Display.DisplayTilesOnBoard(game1.GetTileOnBoard());
+        // Display.DisplayTilesOnBoard(game1.GetTileOnBoard());
+        foreach (var player in game1.GetPlayers())
+        {
+            int countEnd = game1.PlayerTileCount(player);
+            Console.WriteLine($"{player.GetName()} tiles on hand : {countEnd}");
+        }
     }
 }

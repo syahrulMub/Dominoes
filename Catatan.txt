@@ -41,3 +41,15 @@ delegate belum bisa
 refactor foreach?
 menggunakan linQ untuk foreach filtering
 roslyn path
+
+08 / 08 / 2023
+update 
+1. menambahkan position pada tiles
+2. menambah method untuk menghitung total tile yang masih di punyai oleh setiap player
+3. mencoba menampilkan urut di console
+
+kekurangan
+1. urutan diconsole belum bisa vertical dan horizontal, sepertinya harus mengubah ke game runner
+2. mengurutkan leader board untuk pemenang, baru menampilkan hasil
+3. belum bisa readkey di program.cs , dan belum bisa mengganti method untuk player otomatis input side yang diinginkan
+4. method untuk valid vertical
