@@ -48,7 +48,7 @@ public class Tile : ITile
     }
 
 }
-
+//berbeda di class
 public enum TileOrientation
 {
     vertical,

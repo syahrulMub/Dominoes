@@ -273,21 +273,16 @@ public class GameRunner
             Console.WriteLine("Game end with 0 tile");
             return true;
         }
-        if (_boneyard.tilesOnBoneyard.Count == 0)
+        if (_boneyard.tilesOnBoneyard.Count == 0 && _validSideTiles.Count >= 2)
         {
-            foreach (var validTile in _validSideTiles)
+            if (GameEndWithNoSameTiles(_validSideTiles[0]) && GameEndWithNoSameTiles(_validSideTiles[1]))
             {
-                if (GameEndWithNoSameTiles(validTile))
-                {
-                    Console.WriteLine("game End couse no same tile anymore");
-                    return true;
-                }
-                break;
+                Console.WriteLine("game End couse no same tile anymore");
+                return true;
             }
             return false;
         }
         return false;
-
     }
     private bool GameEndWithZeroTile()
     {
@@ -323,4 +318,5 @@ public class GameRunner
         }
         return false;
     }
+    //menentukan end game
 }

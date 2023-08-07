@@ -128,8 +128,9 @@ class Program
             {
                 Console.WriteLine(validNumber);
             }
+            Console.ReadKey();
         }
         // Display.DisplayBoard(game1.GetTileOnBoard());
-        // Display.DisplayTilesOnBoard(game1.GetTileOnBoard());
+        Display.DisplayTilesOnBoard(game1.GetTileOnBoard());
     }
 }

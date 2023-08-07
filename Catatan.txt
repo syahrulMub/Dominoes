@@ -31,3 +31,13 @@ karena saya sudah menentukan vertical dan horizontalnya.
 tersebut tidak memberikan kesempatan untuk index[1], sehingga harus dijalankan secara terpisah
 dan ketika keduanya atau selanjutnya mengembalikan nilai true, maka jika semuanya true game akan berakhir.
 
+
+
+board tampilan menunjukkan tampilan hasil seperti game
+user menentukan tile dan orientasi dan valid tiles
+skoring berdasarkan total tile yang tersisa
+delegate belum bisa
+
+refactor foreach?
+menggunakan linQ untuk foreach filtering
+roslyn path
