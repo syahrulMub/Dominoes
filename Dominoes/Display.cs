@@ -2,69 +2,86 @@ namespace Dominoes;
 using System.Collections.Generic;
 public class Display
 {
-    public static void DisplayBoneyard(List<List<int>> boneyard)
-    {
-        foreach (var list in boneyard)
-        {
-            int sideA = list[0];
-            int sideB = list[1];
-            Console.Write($"{sideA}|{sideB} ");
-
-        }
-        Console.WriteLine();
-    }
     public static void DisplayPlayerTiles(List<Tile> tiles)
     {
         foreach (var tile in tiles)
-
+        {
             Console.Write($"{tile.GetTileSideA()}|{tile.GetTileSideB()} ");
+        }
+        Console.WriteLine();
+    }
+    public static void DrawBoard(Board board, List<Tile> tilesHorizontal, List<Tile> tilesVertical)
+    {
+        int cellSize = 5;
+        int boardSize = board.GetBoardSize();
+
+        Console.WriteLine($"Setting board boundary condition: {boardSize}");
+        Console.WriteLine(new string('-', (cellSize + 1) * boardSize + 1));
+
+        for (int i = 0; i < boardSize; i++)
+        {
+            for (int j = 0; j < boardSize; j++)
+            {
+                bool tileFound = false;
+
+                foreach (var tile in tilesHorizontal)
+                {
+                    int x = tile.GetTilePosition().GetPosX();
+                    int y = tile.GetTilePosition().GetPosY();
+
+                    if (x == j && y == i)
+                    {
+                        tileFound = true;
+
+                        if (tile.GetTileOrientation() == TileOrientation.horizontal)
+                        {
+                            Console.Write($" {tile.GetTileSideA()}|{tile.GetTileSideB()} ");
+                        }
+                        else if (tile.GetTileOrientation() == TileOrientation.vertical)
+                        {
+                            Console.Write($" {tile.GetTileSideA()}/{tile.GetTileSideB()} ");
+                        }
+                        break;
+                    }
+                }
+
+                if (!tileFound)
+                {
+                    foreach (var tile in tilesVertical)
+                    {
+                        int a = tile.GetTilePosition().GetPosX();
+                        int b = tile.GetTilePosition().GetPosY();
+
+                        if (a == j && b == i)
+                        {
+                            tileFound = true;
+
+                            if (tile.GetTileOrientation() == TileOrientation.horizontal)
+                            {
+                                Console.Write($" {tile.GetTileSideA()}|{tile.GetTileSideB()} ");
+                            }
+                            else if (tile.GetTileOrientation() == TileOrientation.vertical)
+                            {
+                                Console.Write($" {tile.GetTileSideA()}/{tile.GetTileSideB()} ");
+                            }
+                            break;
+                        }
+                    }
+                }
+
+                if (!tileFound)
+                {
+                    Console.Write(new string(' ', cellSize));
+                }
+
+                Console.Write("|");
+            }
+            Console.WriteLine();
+            Console.WriteLine(new string('-', (cellSize + 1) * boardSize + 1));
+        }
         Console.WriteLine();
     }
 
-    public static void DisplayTilesOnBoard(List<Tile> tiles)
-    {
-        int i = 1;
-        foreach (var tile in tiles)
-        {
-            Console.WriteLine($"{i}Tile value : {tile.GetTileSideA()}|{tile.GetTileSideB()} Tile Orentation : {tile.GetTileOrientation()} Position : {tile.GetTilePosition().GetPosX()}, {tile.GetTilePosition().GetPosY()}");
-            i += 1;
-        }
-
-    }
-    public static void DisplayBoard(List<Tile> tiles)
-    {
-        int size = 100;
-        string[,] matrix = new string[size, size];
-        for (int row = 0; row < size; row++)
-        {
-            for (int columb = 0; columb < size; columb++)
-            {
-                matrix[row, columb] = "   ";
-            }
-        }
-        foreach (var tile in tiles)
-        {
-            Position position = tile.GetTilePosition();
-            int x = position.GetPosX();
-            int y = position.GetPosY();
-            if (tile.GetTileOrientation() == TileOrientation.horizontal)
-            {
-
-                matrix[y, x] = $"{tile.GetTileSideA()}|{tile.GetTileSideB()} ";
-            }
-            else if (tile.GetTileOrientation() == TileOrientation.vertical)
-            {
-                matrix[y, x] = $"{tile.GetTileSideA()}-{tile.GetTileSideB()}";
-            }
-        }
-        for (int row = 0; row < size; row++)
-        {
-            for (int columb = 0; columb < size; columb++)
-            {
-                Console.Write(matrix[row, columb]);
-            }
-            Console.WriteLine();
-        }
-    }
 }
+
 

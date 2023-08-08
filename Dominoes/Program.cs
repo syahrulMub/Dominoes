@@ -20,9 +20,9 @@ class Program
         player3.SetName("oziel");
 
 
-        Boneyard boneyard = new Boneyard(5);
+        Boneyard boneyard = new Boneyard(7);
         Board board = new Board();
-        board.SetBoard(50, 50);
+        board.SetBoardSize(20);
 
         game1.AddBondyard(boneyard);
         game1.AddBoard(board);
@@ -32,114 +32,96 @@ class Program
 
         // Display.DisplayPlayerTiles(player1Tiles);
         // Display.DisplayPlayerTiles(player2Tiles);
-        Console.WriteLine(boneyard.tilesOnBoneyard.Count);
-        if (boneyard.tilesOnBoneyard != null)
-        {
-            List<List<int>> availableBoneyard = boneyard.tilesOnBoneyard;
-            Display.DisplayBoneyard(availableBoneyard);
-        }
-        game1.GenerateTiles(player1, 4);
-        game1.GenerateTiles(player2, 4);
-        game1.GenerateTiles(player3, 4);
+        game1.GenerateTiles(player1, 12);
+        game1.GenerateTiles(player2, 12);
+        game1.GenerateTiles(player3, 12);
 
-        Console.WriteLine("====Game Start====");
+        Console.WriteLine("=====Game Start=====");
 
         while (!game1.IsEnded())
         {
-            List<Tile> player1Tiles = game1.GetPlayerTiles(player1);
-            List<Tile> player2Tiles = game1.GetPlayerTiles(player2);
-            List<Tile> player3Tiles = game1.GetPlayerTiles(player3);
-            bool player1ValidMove = false;
-            Console.WriteLine($"This is {player1.GetName()} Turn");
-            foreach (var tile in player1Tiles)
-            {
-                if (game1.MakeMove(tile))
-                {
-                    player1ValidMove = true;
-                    Console.WriteLine($"{player1.GetName()} Place {tile.GetTileSideA()}|{tile.GetTileSideB()} on Board");
-                    break;
-                }
-            }
-            if (player1ValidMove == false)
-            {
-                if (boneyard.tilesOnBoneyard.Count != 0)
-                {
-                    Console.WriteLine($"{player1.GetName()} Pick card on Boneyard");
-                    game1.GenerateTiles(player1, 1);
-                    game1.MoveToNextPlayer();
-                }
-                else
-                {
-                    Console.WriteLine($"{player1.GetName()} Skip The turn");
-                    game1.MoveToNextPlayer();
-                }
-            }
-            bool player2ValidMove = false;
-            Console.WriteLine($"This is {player2.GetName()} Turn");
-            foreach (var tile in player2Tiles)
-            {
-                if (game1.MakeMove(tile))
-                {
-                    player2ValidMove = true;
-                    Console.WriteLine($"{player2.GetName()} Place {tile.GetTileSideA()}|{tile.GetTileSideB()} on Board");
-                    break;
-                }
-            }
-            if (player2ValidMove == false)
-            {
-                if (boneyard.tilesOnBoneyard.Count != 0)
-                {
-                    Console.WriteLine($"{player2.GetName()} Pick card on Boneyard");
-                    game1.GenerateTiles(player2, 1);
-                    game1.MoveToNextPlayer();
-                }
-                else
-                {
-                    Console.WriteLine($"{player2.GetName()} Skip The turn");
-                    game1.MoveToNextPlayer();
-                }
-            }
+            game1.GetPlayerTiles(player1);
+            game1.GetPlayerTiles(player2);
+            game1.GetPlayerTiles(player3);
 
-            bool player3ValidMove = false;
-            Console.WriteLine($"This is {player3.GetName()} Turn");
-            foreach (var tile in player3Tiles)
-            {
-                if (game1.MakeMove(tile))
-                {
-                    player3ValidMove = true;
-                    Console.WriteLine($"{player3.GetName()} Place {tile.GetTileSideA()}|{tile.GetTileSideB()} on Board");
-                    break;
-                }
-            }
-            if (player3ValidMove == false)
+            Display.DrawBoard(board, game1.GetTileOnBoard(), game1.GetTileVerticalOnBoard());
+            Console.WriteLine("=========================================");
+            Console.WriteLine($"Now is {game1.GetCurrentPlayer().GetName()} Turn");
+            Console.WriteLine("=========================================\n");
+            Display.DisplayPlayerTiles(game1.GetPlayerTiles(game1.GetCurrentPlayer()));
+            bool validInput = false;
+            if (!game1.ValidMove(game1.GetCurrentPlayer()))
             {
                 if (boneyard.tilesOnBoneyard.Count != 0)
                 {
-                    Console.WriteLine($"{player3.GetName()} Pick card on Boneyard");
-                    game1.GenerateTiles(player3, 1);
+                    Console.WriteLine("you did't have same card");
+                    Console.WriteLine("please pick card on boneyard");
+                    game1.GenerateTiles(game1.GetCurrentPlayer(), 1);
+                    Console.Write("press any key to move next player");
+                    Console.ReadKey();
                     game1.MoveToNextPlayer();
+
+                }
+                else if (boneyard.tilesOnBoneyard.Count == 0)
+                {
+                    Console.WriteLine("you did't have same card");
+                    Console.WriteLine("All tiles in boneyard already taken");
+                    Console.Write("press any key to move next player");
+                    Console.ReadKey();
+                    game1.MoveToNextPlayer();
+                }
+            }
+            else if (game1.ValidMove(game1.GetCurrentPlayer()))
+            {
+                Console.Write("Enter the tile by index (from 0) to place your tile on board : ");
+                int setTilesOnBoard = int.Parse(Console.ReadLine());
+
+                Console.WriteLine("Choose placement direction:");
+                Console.WriteLine("1. Left");
+                Console.WriteLine("2. Right");
+                Console.WriteLine("3. Bottom");
+                Console.WriteLine("4. Top");
+                Console.Write("Enter your choice: ");
+                int placementChoice = int.Parse(Console.ReadLine());
+
+                Tile selectedTile = game1.GetPlayerTiles(game1.GetCurrentPlayer())[setTilesOnBoard];
+                if (placementChoice == 1)
+                {
+                    if (game1.MakeMove(selectedTile, 1))
+                    {
+                        validInput = true;
+                    }
+                }
+                else if (placementChoice == 2)
+                {
+                    if (game1.MakeMove(selectedTile, 2))
+                    {
+                        validInput = true;
+                    }
+                }
+                else if (placementChoice == 3)
+                {
+                    if (game1.MakeMove(selectedTile, 3))
+                    {
+                        validInput = true;
+                    }
+                    if (game1.MakeMove(selectedTile, 3))
+                    {
+                        validInput = true;
+                    }
+                }
+                else if (placementChoice == 4)
+                {
+                    if (game1.MakeMove(selectedTile, 4))
+                    {
+                        validInput = true;
+                    }
                 }
                 else
                 {
-                    Console.WriteLine($"{player3.GetName()} Skip The turn");
-                    game1.MoveToNextPlayer();
+                    Console.WriteLine("invalid choice please enter a valid option");
                 }
             }
-            Display.DisplayPlayerTiles(player1Tiles);
-            Display.DisplayPlayerTiles(player2Tiles);
-            Display.DisplayPlayerTiles(player3Tiles);
-            foreach (var validNumber in game1._validSideTiles)
-            {
-                Console.WriteLine(validNumber);
-            }
-            Console.ReadKey();
-        }
-        Display.DisplayBoard(game1.GetTileOnBoard());
-        // Display.DisplayTilesOnBoard(game1.GetTileOnBoard());
-        foreach (var player in game1.GetPlayers())
-        {
-            int countEnd = game1.PlayerTileCount(player);
-            Console.WriteLine($"{player.GetName()} tiles on hand : {countEnd}");
         }
     }
 }

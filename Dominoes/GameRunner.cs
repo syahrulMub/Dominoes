@@ -13,6 +13,7 @@ public class GameRunner
     private IPlayer? _currentPlayer;
     public List<int> _validSideTiles;
     private List<Tile> _tileOnBoard;
+    private List<Tile> _verticalTileOnBoard;
 
     //constructor game runner
     public GameRunner()
@@ -24,6 +25,8 @@ public class GameRunner
         _boneyard = new Boneyard();
         _validSideTiles = new List<int>();
         _tileOnBoard = new List<Tile>();
+        _verticalTileOnBoard = new List<Tile>();
+
     }
     public GameRunner(IPlayer player, List<Tile> tile)
     {
@@ -34,7 +37,7 @@ public class GameRunner
         _boneyard = new Boneyard();
         _validSideTiles = new List<int>();
         _tileOnBoard = new List<Tile>();
-
+        _verticalTileOnBoard = new List<Tile>();
     }
 
     //method for add player to the game
@@ -115,11 +118,15 @@ public class GameRunner
     }
 
     //method for insert tile on board
-    public bool MakeMove(Tile tile)
+    public bool MakeMove(Tile tile, int side)
     {
         List<Tile> currentPlayerTiles = _playersResource[_currentPlayer];
         if (currentPlayerTiles.Contains(tile))
         {
+            if (_verticalTileOnBoard.Count == 0)
+            {
+                ValidateTopAndButtomSide();
+            }
             //logic for first input
             if (FirstValidMove(tile))
             {
@@ -131,34 +138,78 @@ public class GameRunner
             else if (!FirstValidMove(tile) && _tileOnBoard != null)
             {
                 //method for validside last index right
-                if (RightValidSide(tile))
+                if (side == 1)
                 {
-                    if (tile.GetTileSideA() == tile.GetTileSideB())
+                    if (RightValidSide(tile))
                     {
-                        tile.SetTileOrientation(TileOrientation.vertical);
+                        if (tile.GetTileSideA() == tile.GetTileSideB())
+                        {
+                            tile.SetTileOrientation(TileOrientation.vertical);
+                        }
+                        else if (tile.GetTileSideA() != tile.GetTileSideB())
+                        {
+                            tile.SetTileOrientation(TileOrientation.horizontal);
+                        }
+                        currentPlayerTiles.Remove(tile);
+                        MoveToNextPlayer();
+                        return true;
                     }
-                    else if (tile.GetTileSideA() != tile.GetTileSideB())
-                    {
-                        tile.SetTileOrientation(TileOrientation.horizontal);
-                    }
-                    currentPlayerTiles.Remove(tile);
-                    MoveToNextPlayer();
-                    return true;
+                    return false;
                 }
                 //method for validside 0 index left
-                else if (LeftValidSide(tile))
+                if (side == 2)
                 {
-                    if (tile.GetTileSideA() == tile.GetTileSideB())
+                    if (LeftValidSide(tile))
                     {
-                        tile.SetTileOrientation(TileOrientation.vertical);
+                        if (tile.GetTileSideA() == tile.GetTileSideB())
+                        {
+                            tile.SetTileOrientation(TileOrientation.vertical);
+                        }
+                        else if (tile.GetTileSideA() != tile.GetTileSideB())
+                        {
+                            tile.SetTileOrientation(TileOrientation.horizontal);
+                        }
+                        currentPlayerTiles.Remove(tile);
+                        MoveToNextPlayer();
+                        return true;
                     }
-                    else if (tile.GetTileSideA() != tile.GetTileSideB())
+                    return false;
+                }
+                if (side == 3 && _verticalTileOnBoard.Count != 0)
+                {
+                    if (BottomValidSide(tile))
                     {
-                        tile.SetTileOrientation(TileOrientation.horizontal);
+                        if (tile.GetTileSideA() == tile.GetTileSideB())
+                        {
+                            tile.SetTileOrientation(TileOrientation.horizontal);
+                        }
+                        else if (tile.GetTileSideA() != tile.GetTileSideB())
+                        {
+                            tile.SetTileOrientation(TileOrientation.vertical);
+                        }
+                        currentPlayerTiles.Remove(tile);
+                        MoveToNextPlayer();
+                        return true;
                     }
-                    currentPlayerTiles.Remove(tile);
-                    MoveToNextPlayer();
-                    return true;
+                    return false;
+                }
+                if (side == 4 && _verticalTileOnBoard.Count != 0)
+                {
+                    if (TopValidSide(tile))
+                    {
+                        if (tile.GetTileSideA() == tile.GetTileSideB())
+                        {
+                            tile.SetTileOrientation(TileOrientation.horizontal);
+                        }
+                        else if (tile.GetTileSideA() != tile.GetTileSideB())
+                        {
+                            tile.SetTileOrientation(TileOrientation.vertical);
+                        }
+                        currentPlayerTiles.Remove(tile);
+                        MoveToNextPlayer();
+                        return true;
+                    }
+                    return false;
                 }
                 return false;
             }
@@ -166,14 +217,13 @@ public class GameRunner
         }
         return false;
     }
-
     private bool FirstValidMove(Tile tile)
     {
         if (_tileOnBoard.Count == 0)
         {
             if (tile.GetTileSideA() == tile.GetTileSideB())
             {
-                tile.SetTilePosition(_board.GetSizeX() / 2, _board.GetSizeY() / 2);
+                tile.SetTilePosition(_board.GetBoardSize() / 2, _board.GetBoardSize() / 2);
                 tile.SetTileOrientation(TileOrientation.vertical);
                 _tileOnBoard.Add(tile);
                 _validSideTiles.Add(tile.GetTileSideB());
@@ -181,7 +231,7 @@ public class GameRunner
             }
             else
             {
-                tile.SetTilePosition(15, 15);
+                tile.SetTilePosition(_board.GetBoardSize() / 2, _board.GetBoardSize() / 2);
                 tile.SetTileOrientation(TileOrientation.horizontal);
                 _tileOnBoard.Add(tile);
                 _validSideTiles.Add(tile.GetTileSideA());
@@ -197,7 +247,14 @@ public class GameRunner
         {
             if (thisTile.GetTileSideA() == _validSideTiles[0])
             {
-                thisTile.SetTilePosition(_tileOnBoard[0].GetTilePosition().GetPosX() - 1, _tileOnBoard[0].GetTilePosition().GetPosY());
+                if (_tileOnBoard[0].GetTilePosition().GetPosX() > 1)
+                {
+                    thisTile.SetTilePosition(_tileOnBoard[0].GetTilePosition().GetPosX() - 1, _tileOnBoard[0].GetTilePosition().GetPosY());
+                }
+                else if (_tileOnBoard[0].GetTilePosition().GetPosX() == 1)
+                {
+                    thisTile.SetTilePosition(_tileOnBoard[0].GetTilePosition().GetPosX(), _tileOnBoard[0].GetTilePosition().GetPosY() + 1);
+                }
                 _validSideTiles[0] = thisTile.GetTileSideB();
                 thisTile.FlipTiles();
                 _tileOnBoard.Insert(0, thisTile);
@@ -205,7 +262,14 @@ public class GameRunner
             }
             else if (thisTile.GetTileSideB() == _validSideTiles[0])
             {
-                thisTile.SetTilePosition(_tileOnBoard[0].GetTilePosition().GetPosX() - 1, _tileOnBoard[0].GetTilePosition().GetPosY());
+                if (_tileOnBoard[0].GetTilePosition().GetPosX() > 1)
+                {
+                    thisTile.SetTilePosition(_tileOnBoard[0].GetTilePosition().GetPosX() - 1, _tileOnBoard[0].GetTilePosition().GetPosY());
+                }
+                else if (_tileOnBoard[0].GetTilePosition().GetPosX() == 1)
+                {
+                    thisTile.SetTilePosition(_tileOnBoard[0].GetTilePosition().GetPosX(), _tileOnBoard[0].GetTilePosition().GetPosY() + 1);
+                }
                 _validSideTiles[0] = thisTile.GetTileSideA();
                 _tileOnBoard.Insert(0, thisTile);
                 return true;
@@ -217,14 +281,28 @@ public class GameRunner
     {
         if (thisTile.GetTileSideA() == _validSideTiles[1])
         {
-            thisTile.SetTilePosition(_tileOnBoard[_tileOnBoard.Count - 1].GetTilePosition().GetPosX() + 1, _tileOnBoard[_tileOnBoard.Count - 1].GetTilePosition().GetPosY());
+            if (_tileOnBoard[^1].GetTilePosition().GetPosX() < _board.GetBoardSize() - 1)
+            {
+                thisTile.SetTilePosition(_tileOnBoard[_tileOnBoard.Count - 1].GetTilePosition().GetPosX() + 1, _tileOnBoard[_tileOnBoard.Count - 1].GetTilePosition().GetPosY());
+            }
+            else if (_tileOnBoard[^1].GetTilePosition().GetPosX() == _board.GetBoardSize() - 1)
+            {
+                thisTile.SetTilePosition(_tileOnBoard[_tileOnBoard.Count - 1].GetTilePosition().GetPosX(), _tileOnBoard[_tileOnBoard.Count - 1].GetTilePosition().GetPosY() - 1);
+            }
             _validSideTiles[1] = thisTile.GetTileSideB();
             _tileOnBoard.Add(thisTile);
             return true;
         }
         else if (thisTile.GetTileSideB() == _validSideTiles[1])
         {
-            thisTile.SetTilePosition(_tileOnBoard[_tileOnBoard.Count - 1].GetTilePosition().GetPosX() + 1, _tileOnBoard[_tileOnBoard.Count - 1].GetTilePosition().GetPosY());
+            if (_tileOnBoard[^1].GetTilePosition().GetPosX() < _board.GetBoardSize() - 1)
+            {
+                thisTile.SetTilePosition(_tileOnBoard[_tileOnBoard.Count - 1].GetTilePosition().GetPosX() + 1, _tileOnBoard[_tileOnBoard.Count - 1].GetTilePosition().GetPosY());
+            }
+            else if (_tileOnBoard[^1].GetTilePosition().GetPosX() == _board.GetBoardSize() - 1)
+            {
+                thisTile.SetTilePosition(_tileOnBoard[_tileOnBoard.Count - 1].GetTilePosition().GetPosX(), _tileOnBoard[_tileOnBoard.Count - 1].GetTilePosition().GetPosY() - 1);
+            }
             _validSideTiles[1] = thisTile.GetTileSideA();
             thisTile.FlipTiles();
             _tileOnBoard.Add(thisTile);
@@ -234,29 +312,64 @@ public class GameRunner
     }
     private bool ValidateTopAndButtomSide()
     {
-        if (_tileOnBoard.Count <= 2)
+        if (_verticalTileOnBoard.Count == 0 && _tileOnBoard.Count >= 3)
         {
-            return false;
-        }
-        foreach (var tile in _tileOnBoard)
-        {
-            if (tile.GetTileOrientation() == TileOrientation.vertical)
+            foreach (var tile in _tileOnBoard)
             {
-                if (tile != _tileOnBoard[0] && tile != _tileOnBoard[-1])
+                if (tile.GetTileOrientation() == TileOrientation.vertical)
                 {
-                    return true;
+                    if (tile != _tileOnBoard[0] && tile != _tileOnBoard[_tileOnBoard.Count - 1])
+                    {
+                        int validTopSide = tile.GetTileSideA();
+                        _validSideTiles.Add(validTopSide);
+                        int validButtomSide = tile.GetTileSideB();
+                        _validSideTiles.Add(validButtomSide);
+                        _verticalTileOnBoard.Add(tile);
+                        _tileOnBoard.Remove(tile);
+                        return true;
+                    }
                 }
             }
         }
         return false;
     }
-    private bool TopValidSide(Tile Thistile)
+    private bool TopValidSide(Tile thisTile)
     {
-        throw new NotImplementedException();
+        if (thisTile.GetTileSideA() == _validSideTiles[3])
+        {
+            thisTile.SetTilePosition(_verticalTileOnBoard[0].GetTilePosition().GetPosX(), _verticalTileOnBoard[_verticalTileOnBoard.Count - 1].GetTilePosition().GetPosY() + 1);
+            _validSideTiles[3] = thisTile.GetTileSideB();
+            // thisTile.FlipTiles();
+            _verticalTileOnBoard.Add(thisTile);
+            return true;
+        }
+        else if (thisTile.GetTileSideB() == _validSideTiles[3])
+        {
+            thisTile.SetTilePosition(_verticalTileOnBoard[0].GetTilePosition().GetPosX(), _verticalTileOnBoard[_verticalTileOnBoard.Count - 1].GetTilePosition().GetPosY() + 1);
+            _validSideTiles[3] = thisTile.GetTileSideA();
+            _verticalTileOnBoard.Add(thisTile);
+            return true;
+        }
+        return false;
     }
-    private bool BottomValidSide(Tile Thistile)
+    private bool BottomValidSide(Tile thisTile)
     {
-        throw new NotImplementedException();
+        if (thisTile.GetTileSideA() == _validSideTiles[2])
+        {
+            thisTile.SetTilePosition(_verticalTileOnBoard[0].GetTilePosition().GetPosX(), _verticalTileOnBoard[0].GetTilePosition().GetPosY() - 1);
+            _validSideTiles[2] = thisTile.GetTileSideB();
+            _verticalTileOnBoard.Insert(0, thisTile);
+            return true;
+        }
+        else if (thisTile.GetTileSideB() == _validSideTiles[2])
+        {
+            thisTile.SetTilePosition(_verticalTileOnBoard[0].GetTilePosition().GetPosX(), _verticalTileOnBoard[0].GetTilePosition().GetPosY() - 1);
+            _validSideTiles[2] = thisTile.GetTileSideA();
+            // thisTile.FlipTiles();
+            _verticalTileOnBoard.Insert(0, thisTile);
+            return true;
+        }
+        return false;
     }
     public void MoveToNextPlayer()
     {
@@ -281,6 +394,10 @@ public class GameRunner
     {
         return _tileOnBoard;
     }
+    public List<Tile> GetTileVerticalOnBoard()
+    {
+        return _verticalTileOnBoard;
+    }
     public bool IsEnded()
     {
         _currentPlayer = _players[0];
@@ -290,14 +407,13 @@ public class GameRunner
         }
         if (GameEndWithZeroTile())
         {
-            Console.WriteLine("Game end with 0 tile");
             return true;
         }
         if (_boneyard.tilesOnBoneyard.Count == 0 && _validSideTiles.Count >= 2)
         {
-            if (GameEndWithNoSameTiles(_validSideTiles[0]) && GameEndWithNoSameTiles(_validSideTiles[1]))
+            if (GameEndWithNoSameTiles(_validSideTiles[0]) && GameEndWithNoSameTiles(_validSideTiles[1])
+            && GameEndWithNoSameTiles(_validSideTiles[2]) && GameEndWithNoSameTiles(_validSideTiles[3]))
             {
-                Console.WriteLine("game End couse no same tile anymore");
                 return true;
             }
             return false;
@@ -335,6 +451,38 @@ public class GameRunner
         if (!thisPlayerValidTiles)
         {
             return true;
+        }
+        return false;
+    }
+    //player hint move
+    public bool ValidMove(IPlayer player)
+    {
+        foreach (var thisTile in _playersResource[player])
+        {
+            if (_tileOnBoard.Count == 0)
+            {
+                return true;
+            }
+            if (_verticalTileOnBoard.Count == 0)
+            {
+                return true;
+            }
+            else if (thisTile.GetTileSideA() == _validSideTiles[0] || thisTile.GetTileSideB() == _validSideTiles[0])
+            {
+                return true;
+            }
+            else if (thisTile.GetTileSideA() == _validSideTiles[1] || thisTile.GetTileSideB() == _validSideTiles[1])
+            {
+                return true;
+            }
+            else if (thisTile.GetTileSideA() == _validSideTiles[2] || thisTile.GetTileSideB() == _validSideTiles[2])
+            {
+                return true;
+            }
+            else if (thisTile.GetTileSideA() == _validSideTiles[3] || thisTile.GetTileSideB() == _validSideTiles[3])
+            {
+                return true;
+            }
         }
         return false;
     }
