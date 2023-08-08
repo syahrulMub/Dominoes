@@ -71,22 +71,19 @@ public class GameRunner
     //method for create domino tiles
     public bool GenerateTiles(IPlayer player, int count)
     {
-        if (_boneyard.tilesOnBoneyard.Count >= count)
+        if (_boneyard.tilesOnBoneyard.Count >= count && _playersResource != null)
         {
-            if (_playersResource != null)
+            for (int i = 0; i < count; i++)
             {
-                for (int i = 0; i < count; i++)
+                foreach (var Player in _playersResource.Keys)
                 {
-                    foreach (var Player in _playersResource.Keys)
+                    if (player == Player && count != 0)
                     {
-                        if (player == Player && count != 0)
-                        {
-                            List<int>? tileData = _boneyard.GetTileData();
-                            int a = tileData[0];
-                            int b = tileData[1];
-                            _playersResource[player].Add(new Tile(a, b));
-                            _boneyard.RemoveData(tileData);
-                        }
+                        List<int>? tileData = _boneyard.GetTileData();
+                        int a = tileData[0];
+                        int b = tileData[1];
+                        _playersResource[player].Add(new Tile(a, b));
+                        _boneyard.RemoveData(tileData);
                     }
                 }
             }
@@ -200,7 +197,7 @@ public class GameRunner
         {
             if (thisTile.GetTileSideA() == _validSideTiles[0])
             {
-                thisTile.SetTilePosition(_tileOnBoard[0].GetTilePosition().GetPosX() - 3, _tileOnBoard[0].GetTilePosition().GetPosY());
+                thisTile.SetTilePosition(_tileOnBoard[0].GetTilePosition().GetPosX() - 1, _tileOnBoard[0].GetTilePosition().GetPosY());
                 _validSideTiles[0] = thisTile.GetTileSideB();
                 thisTile.FlipTiles();
                 _tileOnBoard.Insert(0, thisTile);
@@ -208,7 +205,7 @@ public class GameRunner
             }
             else if (thisTile.GetTileSideB() == _validSideTiles[0])
             {
-                thisTile.SetTilePosition(_tileOnBoard[0].GetTilePosition().GetPosX() - 3, _tileOnBoard[0].GetTilePosition().GetPosY());
+                thisTile.SetTilePosition(_tileOnBoard[0].GetTilePosition().GetPosX() - 1, _tileOnBoard[0].GetTilePosition().GetPosY());
                 _validSideTiles[0] = thisTile.GetTileSideA();
                 _tileOnBoard.Insert(0, thisTile);
                 return true;
@@ -220,14 +217,14 @@ public class GameRunner
     {
         if (thisTile.GetTileSideA() == _validSideTiles[1])
         {
-            thisTile.SetTilePosition(_tileOnBoard[_tileOnBoard.Count - 1].GetTilePosition().GetPosX() + 3, _tileOnBoard[_tileOnBoard.Count - 1].GetTilePosition().GetPosY());
+            thisTile.SetTilePosition(_tileOnBoard[_tileOnBoard.Count - 1].GetTilePosition().GetPosX() + 1, _tileOnBoard[_tileOnBoard.Count - 1].GetTilePosition().GetPosY());
             _validSideTiles[1] = thisTile.GetTileSideB();
             _tileOnBoard.Add(thisTile);
             return true;
         }
         else if (thisTile.GetTileSideB() == _validSideTiles[1])
         {
-            thisTile.SetTilePosition(_tileOnBoard[_tileOnBoard.Count - 1].GetTilePosition().GetPosX() + 3, _tileOnBoard[_tileOnBoard.Count - 1].GetTilePosition().GetPosY());
+            thisTile.SetTilePosition(_tileOnBoard[_tileOnBoard.Count - 1].GetTilePosition().GetPosX() + 1, _tileOnBoard[_tileOnBoard.Count - 1].GetTilePosition().GetPosY());
             _validSideTiles[1] = thisTile.GetTileSideA();
             thisTile.FlipTiles();
             _tileOnBoard.Add(thisTile);

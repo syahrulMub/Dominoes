@@ -53,3 +53,7 @@ kekurangan
 2. mengurutkan leader board untuk pemenang, baru menampilkan hasil
 3. belum bisa readkey di program.cs , dan belum bisa mengganti method untuk player otomatis input side yang diinginkan
 4. method untuk valid vertical
+
+08  / 08 / 2023 morning
+clear screen (Console.Clar())
+return player menjadi IPlayer?

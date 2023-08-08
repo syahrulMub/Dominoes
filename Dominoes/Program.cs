@@ -134,7 +134,7 @@ class Program
             }
             Console.ReadKey();
         }
-        // Display.DisplayBoard(game1.GetTileOnBoard());
+        Display.DisplayBoard(game1.GetTileOnBoard());
         // Display.DisplayTilesOnBoard(game1.GetTileOnBoard());
         foreach (var player in game1.GetPlayers())
         {

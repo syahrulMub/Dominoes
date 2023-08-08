@@ -33,13 +33,13 @@ public class Display
     }
     public static void DisplayBoard(List<Tile> tiles)
     {
-        int size = 200;
+        int size = 100;
         string[,] matrix = new string[size, size];
         for (int row = 0; row < size; row++)
         {
             for (int columb = 0; columb < size; columb++)
             {
-                matrix[row, columb] = " ";
+                matrix[row, columb] = "   ";
             }
         }
         foreach (var tile in tiles)
@@ -50,18 +50,13 @@ public class Display
             if (tile.GetTileOrientation() == TileOrientation.horizontal)
             {
 
-                matrix[y, x - 1] = $"{tile.GetTileSideA()}";
-                matrix[y, x] = $"|";
-                matrix[y, x + 1] = $"{tile.GetTileSideB()} ";
+                matrix[y, x] = $"{tile.GetTileSideA()}|{tile.GetTileSideB()} ";
             }
             else if (tile.GetTileOrientation() == TileOrientation.vertical)
             {
-                matrix[y + 1, x] = $"{tile.GetTileSideA()}";
-                matrix[y, x] = $"-";
-                matrix[y - 1, x] = $"{tile.GetTileSideB()} ";
+                matrix[y, x] = $"{tile.GetTileSideA()}-{tile.GetTileSideB()}";
             }
         }
-
         for (int row = 0; row < size; row++)
         {
             for (int columb = 0; columb < size; columb++)
