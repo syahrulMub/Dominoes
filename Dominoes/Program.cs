@@ -22,7 +22,7 @@ class Program
 
         Boneyard boneyard = new Boneyard(7);
         Board board = new Board();
-        board.SetBoardSize(20);
+        board.SetBoardSize(17);
 
         game1.AddBondyard(boneyard);
         game1.AddBoard(board);
@@ -37,13 +37,13 @@ class Program
         game1.GenerateTiles(player3, 12);
 
         Console.WriteLine("=====Game Start=====");
-
+        game1.SetCurrentPlayer(0);
         while (!game1.IsEnded())
         {
             game1.GetPlayerTiles(player1);
             game1.GetPlayerTiles(player2);
             game1.GetPlayerTiles(player3);
-
+            Console.Clear();
             Display.DrawBoard(board, game1.GetTileOnBoard(), game1.GetTileVerticalOnBoard());
             Console.WriteLine("=========================================");
             Console.WriteLine($"Now is {game1.GetCurrentPlayer().GetName()} Turn");
@@ -79,8 +79,8 @@ class Program
                 Console.WriteLine("Choose placement direction:");
                 Console.WriteLine("1. Left");
                 Console.WriteLine("2. Right");
-                Console.WriteLine("3. Bottom");
-                Console.WriteLine("4. Top");
+                Console.WriteLine("3. Top");
+                Console.WriteLine("4. buttom");
                 Console.Write("Enter your choice: ");
                 int placementChoice = int.Parse(Console.ReadLine());
 
@@ -101,10 +101,6 @@ class Program
                 }
                 else if (placementChoice == 3)
                 {
-                    if (game1.MakeMove(selectedTile, 3))
-                    {
-                        validInput = true;
-                    }
                     if (game1.MakeMove(selectedTile, 3))
                     {
                         validInput = true;

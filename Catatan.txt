@@ -57,3 +57,9 @@ kekurangan
 08  / 08 / 2023 morning
 clear screen (Console.Clar())
 return player menjadi IPlayer?
+
+09 / 08 / 2023
+1. belum menambahkan delegate
+2. skoring akhir ketika gamenya selesai
+3. public modifier
+4. merapikan urutan 

@@ -11,7 +11,7 @@ public class GameRunner
     private Board _board;
     private Boneyard _boneyard;
     private IPlayer? _currentPlayer;
-    public List<int> _validSideTiles;
+    private List<int> _validSideTiles;
     private List<Tile> _tileOnBoard;
     private List<Tile> _verticalTileOnBoard;
 
@@ -116,6 +116,10 @@ public class GameRunner
     {
         return _currentPlayer;
     }
+    public void SetCurrentPlayer(int index)
+    {
+        _currentPlayer = _players[index];
+    }
 
     //method for insert tile on board
     public bool MakeMove(Tile tile, int side)
@@ -138,7 +142,7 @@ public class GameRunner
             else if (!FirstValidMove(tile) && _tileOnBoard != null)
             {
                 //method for validside last index right
-                if (side == 1)
+                if (side == 2)
                 {
                     if (RightValidSide(tile))
                     {
@@ -157,7 +161,7 @@ public class GameRunner
                     return false;
                 }
                 //method for validside 0 index left
-                if (side == 2)
+                else if (side == 1)
                 {
                     if (LeftValidSide(tile))
                     {
@@ -175,7 +179,7 @@ public class GameRunner
                     }
                     return false;
                 }
-                if (side == 3 && _verticalTileOnBoard.Count != 0)
+                else if (side == 3 && _verticalTileOnBoard.Count != 0)
                 {
                     if (BottomValidSide(tile))
                     {
@@ -193,7 +197,7 @@ public class GameRunner
                     }
                     return false;
                 }
-                if (side == 4 && _verticalTileOnBoard.Count != 0)
+                else if (side == 4 && _verticalTileOnBoard.Count != 0)
                 {
                     if (TopValidSide(tile))
                     {
@@ -400,7 +404,7 @@ public class GameRunner
     }
     public bool IsEnded()
     {
-        _currentPlayer = _players[0];
+        // _currentPlayer = _players[0];
         if (_board == null || _players == null || _playersResource == null)
         {
             return false;

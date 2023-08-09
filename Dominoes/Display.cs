@@ -4,9 +4,11 @@ public class Display
 {
     public static void DisplayPlayerTiles(List<Tile> tiles)
     {
-        foreach (var tile in tiles)
+        int tileIndex = 0;
+        for (int i = 0; i < tiles.Count; i++)
         {
-            Console.Write($"{tile.GetTileSideA()}|{tile.GetTileSideB()} ");
+            Console.Write($"({i}) {tiles[tileIndex].GetTileSideA()}|{tiles[tileIndex].GetTileSideB()} ");
+            tileIndex++;
         }
         Console.WriteLine();
     }
