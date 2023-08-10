@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 namespace Dominoes;
 
-public class GameRunner
+public partial class GameRunner
 {
 
     //variabel that game runner needed
     private List<IPlayer> _players;
     private Dictionary<IPlayer, List<Tile>> _playersResource;
-    private Board _board;
+    private IBoard _board;
     private Boneyard _boneyard;
     private IPlayer? _currentPlayer;
     private List<int> _validSideTiles;
@@ -40,7 +40,6 @@ public class GameRunner
         _verticalTileOnBoard = new List<Tile>();
     }
 
-    //method for add player to the game
     public bool AddPlayer(IPlayer player)
     {
         if (player != null)
@@ -62,7 +61,7 @@ public class GameRunner
         }
         return false;
     }
-    public bool AddBoard(Board board)
+    public bool AddBoard(IBoard board)
     {
         if (board != null)
         {
@@ -71,10 +70,15 @@ public class GameRunner
         }
         return false;
     }
-    //method for create domino tiles
+    /// <summary>
+    /// generating tile from bone yard if it available
+    /// </summary>
+    /// <param name="player">target generate tile to they hand</param>
+    /// <param name="count">total tile will player pick</param>
+    /// <returns></returns>
     public bool GenerateTiles(IPlayer player, int count)
     {
-        if (_boneyard.tilesOnBoneyard.Count >= count && _playersResource != null)
+        if (_boneyard.GetTilesOnBoneyard()?.Count >= count && _playersResource != null)
         {
             for (int i = 0; i < count; i++)
             {
@@ -94,10 +98,9 @@ public class GameRunner
         }
         return false;
     }
-    //checkapakah bounyard available
     public bool CheckBoneyardAvailable()
     {
-        if (_boneyard.tilesOnBoneyard?.Count != 0)
+        if (_boneyard.GetTilesOnBoneyard()?.Count != 0)
         {
             return true;
         }
@@ -107,7 +110,7 @@ public class GameRunner
     {
         return _players;
     }
-    //method for access every players tiles
+
     public List<Tile> GetPlayerTiles(IPlayer player)
     {
         return _playersResource[player];
@@ -122,259 +125,7 @@ public class GameRunner
     }
 
     //method for insert tile on board
-    public bool MakeMove(Tile tile, int side)
-    {
-        List<Tile> currentPlayerTiles = _playersResource[_currentPlayer];
-        if (currentPlayerTiles.Contains(tile))
-        {
-            if (_verticalTileOnBoard.Count == 0)
-            {
-                ValidateTopAndButtomSide();
-            }
-            //logic for first input
-            if (FirstValidMove(tile))
-            {
-                currentPlayerTiles.Remove(tile);
-                MoveToNextPlayer();
-                return true;
-            }
-            //logic for nextmove
-            else if (!FirstValidMove(tile) && _tileOnBoard != null)
-            {
-                //method for validside last index right
-                if (side == 2)
-                {
-                    if (RightValidSide(tile))
-                    {
-                        if (tile.GetTileSideA() == tile.GetTileSideB())
-                        {
-                            tile.SetTileOrientation(TileOrientation.vertical);
-                        }
-                        else if (tile.GetTileSideA() != tile.GetTileSideB())
-                        {
-                            tile.SetTileOrientation(TileOrientation.horizontal);
-                        }
-                        currentPlayerTiles.Remove(tile);
-                        MoveToNextPlayer();
-                        return true;
-                    }
-                    return false;
-                }
-                //method for validside 0 index left
-                else if (side == 1)
-                {
-                    if (LeftValidSide(tile))
-                    {
-                        if (tile.GetTileSideA() == tile.GetTileSideB())
-                        {
-                            tile.SetTileOrientation(TileOrientation.vertical);
-                        }
-                        else if (tile.GetTileSideA() != tile.GetTileSideB())
-                        {
-                            tile.SetTileOrientation(TileOrientation.horizontal);
-                        }
-                        currentPlayerTiles.Remove(tile);
-                        MoveToNextPlayer();
-                        return true;
-                    }
-                    return false;
-                }
-                else if (side == 3 && _verticalTileOnBoard.Count != 0)
-                {
-                    if (BottomValidSide(tile))
-                    {
-                        if (tile.GetTileSideA() == tile.GetTileSideB())
-                        {
-                            tile.SetTileOrientation(TileOrientation.horizontal);
-                        }
-                        else if (tile.GetTileSideA() != tile.GetTileSideB())
-                        {
-                            tile.SetTileOrientation(TileOrientation.vertical);
-                        }
-                        currentPlayerTiles.Remove(tile);
-                        MoveToNextPlayer();
-                        return true;
-                    }
-                    return false;
-                }
-                else if (side == 4 && _verticalTileOnBoard.Count != 0)
-                {
-                    if (TopValidSide(tile))
-                    {
-                        if (tile.GetTileSideA() == tile.GetTileSideB())
-                        {
-                            tile.SetTileOrientation(TileOrientation.horizontal);
-                        }
-                        else if (tile.GetTileSideA() != tile.GetTileSideB())
-                        {
-                            tile.SetTileOrientation(TileOrientation.vertical);
-                        }
-                        currentPlayerTiles.Remove(tile);
-                        MoveToNextPlayer();
-                        return true;
-                    }
-                    return false;
-                }
-                return false;
-            }
-            return false;
-        }
-        return false;
-    }
-    private bool FirstValidMove(Tile tile)
-    {
-        if (_tileOnBoard.Count == 0)
-        {
-            if (tile.GetTileSideA() == tile.GetTileSideB())
-            {
-                tile.SetTilePosition(_board.GetBoardSize() / 2, _board.GetBoardSize() / 2);
-                tile.SetTileOrientation(TileOrientation.vertical);
-                _tileOnBoard.Add(tile);
-                _validSideTiles.Add(tile.GetTileSideB());
-                _validSideTiles.Add(tile.GetTileSideA());
-            }
-            else
-            {
-                tile.SetTilePosition(_board.GetBoardSize() / 2, _board.GetBoardSize() / 2);
-                tile.SetTileOrientation(TileOrientation.horizontal);
-                _tileOnBoard.Add(tile);
-                _validSideTiles.Add(tile.GetTileSideA());
-                _validSideTiles.Add(tile.GetTileSideB());
-            }
-            return true;
-        }
-        return false;
-    }
-    private bool LeftValidSide(Tile thisTile)
-    {
-        if (_tileOnBoard != null || _tileOnBoard.Count == 0)
-        {
-            if (thisTile.GetTileSideA() == _validSideTiles[0])
-            {
-                if (_tileOnBoard[0].GetTilePosition().GetPosX() > 1)
-                {
-                    thisTile.SetTilePosition(_tileOnBoard[0].GetTilePosition().GetPosX() - 1, _tileOnBoard[0].GetTilePosition().GetPosY());
-                }
-                else if (_tileOnBoard[0].GetTilePosition().GetPosX() == 1)
-                {
-                    thisTile.SetTilePosition(_tileOnBoard[0].GetTilePosition().GetPosX(), _tileOnBoard[0].GetTilePosition().GetPosY() + 1);
-                }
-                _validSideTiles[0] = thisTile.GetTileSideB();
-                thisTile.FlipTiles();
-                _tileOnBoard.Insert(0, thisTile);
-                return true;
-            }
-            else if (thisTile.GetTileSideB() == _validSideTiles[0])
-            {
-                if (_tileOnBoard[0].GetTilePosition().GetPosX() > 1)
-                {
-                    thisTile.SetTilePosition(_tileOnBoard[0].GetTilePosition().GetPosX() - 1, _tileOnBoard[0].GetTilePosition().GetPosY());
-                }
-                else if (_tileOnBoard[0].GetTilePosition().GetPosX() == 1)
-                {
-                    thisTile.SetTilePosition(_tileOnBoard[0].GetTilePosition().GetPosX(), _tileOnBoard[0].GetTilePosition().GetPosY() + 1);
-                }
-                _validSideTiles[0] = thisTile.GetTileSideA();
-                _tileOnBoard.Insert(0, thisTile);
-                return true;
-            }
-        }
-        return false;
-    }
-    private bool RightValidSide(Tile thisTile)
-    {
-        if (thisTile.GetTileSideA() == _validSideTiles[1])
-        {
-            if (_tileOnBoard[^1].GetTilePosition().GetPosX() < _board.GetBoardSize() - 1)
-            {
-                thisTile.SetTilePosition(_tileOnBoard[_tileOnBoard.Count - 1].GetTilePosition().GetPosX() + 1, _tileOnBoard[_tileOnBoard.Count - 1].GetTilePosition().GetPosY());
-            }
-            else if (_tileOnBoard[^1].GetTilePosition().GetPosX() == _board.GetBoardSize() - 1)
-            {
-                thisTile.SetTilePosition(_tileOnBoard[_tileOnBoard.Count - 1].GetTilePosition().GetPosX(), _tileOnBoard[_tileOnBoard.Count - 1].GetTilePosition().GetPosY() - 1);
-            }
-            _validSideTiles[1] = thisTile.GetTileSideB();
-            _tileOnBoard.Add(thisTile);
-            return true;
-        }
-        else if (thisTile.GetTileSideB() == _validSideTiles[1])
-        {
-            if (_tileOnBoard[^1].GetTilePosition().GetPosX() < _board.GetBoardSize() - 1)
-            {
-                thisTile.SetTilePosition(_tileOnBoard[_tileOnBoard.Count - 1].GetTilePosition().GetPosX() + 1, _tileOnBoard[_tileOnBoard.Count - 1].GetTilePosition().GetPosY());
-            }
-            else if (_tileOnBoard[^1].GetTilePosition().GetPosX() == _board.GetBoardSize() - 1)
-            {
-                thisTile.SetTilePosition(_tileOnBoard[_tileOnBoard.Count - 1].GetTilePosition().GetPosX(), _tileOnBoard[_tileOnBoard.Count - 1].GetTilePosition().GetPosY() - 1);
-            }
-            _validSideTiles[1] = thisTile.GetTileSideA();
-            thisTile.FlipTiles();
-            _tileOnBoard.Add(thisTile);
-            return true;
-        }
-        return false;
-    }
-    private bool ValidateTopAndButtomSide()
-    {
-        if (_verticalTileOnBoard.Count == 0 && _tileOnBoard.Count >= 3)
-        {
-            foreach (var tile in _tileOnBoard)
-            {
-                if (tile.GetTileOrientation() == TileOrientation.vertical)
-                {
-                    if (tile != _tileOnBoard[0] && tile != _tileOnBoard[_tileOnBoard.Count - 1])
-                    {
-                        int validTopSide = tile.GetTileSideA();
-                        _validSideTiles.Add(validTopSide);
-                        int validButtomSide = tile.GetTileSideB();
-                        _validSideTiles.Add(validButtomSide);
-                        _verticalTileOnBoard.Add(tile);
-                        _tileOnBoard.Remove(tile);
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-    private bool TopValidSide(Tile thisTile)
-    {
-        if (thisTile.GetTileSideA() == _validSideTiles[3])
-        {
-            thisTile.SetTilePosition(_verticalTileOnBoard[0].GetTilePosition().GetPosX(), _verticalTileOnBoard[_verticalTileOnBoard.Count - 1].GetTilePosition().GetPosY() + 1);
-            _validSideTiles[3] = thisTile.GetTileSideB();
-            // thisTile.FlipTiles();
-            _verticalTileOnBoard.Add(thisTile);
-            return true;
-        }
-        else if (thisTile.GetTileSideB() == _validSideTiles[3])
-        {
-            thisTile.SetTilePosition(_verticalTileOnBoard[0].GetTilePosition().GetPosX(), _verticalTileOnBoard[_verticalTileOnBoard.Count - 1].GetTilePosition().GetPosY() + 1);
-            _validSideTiles[3] = thisTile.GetTileSideA();
-            _verticalTileOnBoard.Add(thisTile);
-            return true;
-        }
-        return false;
-    }
-    private bool BottomValidSide(Tile thisTile)
-    {
-        if (thisTile.GetTileSideA() == _validSideTiles[2])
-        {
-            thisTile.SetTilePosition(_verticalTileOnBoard[0].GetTilePosition().GetPosX(), _verticalTileOnBoard[0].GetTilePosition().GetPosY() - 1);
-            _validSideTiles[2] = thisTile.GetTileSideB();
-            _verticalTileOnBoard.Insert(0, thisTile);
-            return true;
-        }
-        else if (thisTile.GetTileSideB() == _validSideTiles[2])
-        {
-            thisTile.SetTilePosition(_verticalTileOnBoard[0].GetTilePosition().GetPosX(), _verticalTileOnBoard[0].GetTilePosition().GetPosY() - 1);
-            _validSideTiles[2] = thisTile.GetTileSideA();
-            // thisTile.FlipTiles();
-            _verticalTileOnBoard.Insert(0, thisTile);
-            return true;
-        }
-        return false;
-    }
+
     public void MoveToNextPlayer()
     {
         if (_currentPlayer != null)
@@ -390,7 +141,7 @@ public class GameRunner
             }
         }
     }
-    public Board GetBoard()
+    public IBoard GetBoard()
     {
         return _board;
     }
@@ -404,7 +155,6 @@ public class GameRunner
     }
     public bool IsEnded()
     {
-        // _currentPlayer = _players[0];
         if (_board == null || _players == null || _playersResource == null)
         {
             return false;
@@ -413,7 +163,7 @@ public class GameRunner
         {
             return true;
         }
-        if (_boneyard.tilesOnBoneyard.Count == 0 && _validSideTiles.Count >= 2)
+        if (_boneyard.GetTilesOnBoneyard()?.Count == 0 && _validSideTiles.Count >= 2)
         {
             if (GameEndWithNoSameTiles(_validSideTiles[0]) && GameEndWithNoSameTiles(_validSideTiles[1])
             && GameEndWithNoSameTiles(_validSideTiles[2]) && GameEndWithNoSameTiles(_validSideTiles[3]))
@@ -458,16 +208,22 @@ public class GameRunner
         }
         return false;
     }
-    //player hint move
+
+    /// <summary>
+    /// this method to validate all valid tiles that player can move
+    /// if no valid tile in player tile game management will not give player a chance to move
+    /// </summary>
+    /// <param name="player">check all tile players</param>
+    /// <returns>true if at least have one valid tile to place on board</returns> <summary>
+    /// 
+    /// </summary>
+    /// <param name="player"></param>
+    /// <returns>false if all tile did't have valid number with valid side</returns>
     public bool ValidMove(IPlayer player)
     {
         foreach (var thisTile in _playersResource[player])
         {
             if (_tileOnBoard.Count == 0)
-            {
-                return true;
-            }
-            if (_verticalTileOnBoard.Count == 0)
             {
                 return true;
             }
@@ -479,18 +235,20 @@ public class GameRunner
             {
                 return true;
             }
-            else if (thisTile.GetTileSideA() == _validSideTiles[2] || thisTile.GetTileSideB() == _validSideTiles[2])
+            else if (_verticalTileOnBoard.Count != 0)
             {
-                return true;
-            }
-            else if (thisTile.GetTileSideA() == _validSideTiles[3] || thisTile.GetTileSideB() == _validSideTiles[3])
-            {
-                return true;
+                if (thisTile.GetTileSideA() == _validSideTiles[2] || thisTile.GetTileSideB() == _validSideTiles[2])
+                {
+                    return true;
+                }
+                if (thisTile.GetTileSideA() == _validSideTiles[3] || thisTile.GetTileSideB() == _validSideTiles[3])
+                {
+                    return true;
+                }
             }
         }
         return false;
     }
-    //menentukan end game
     public int PlayerTileCount(IPlayer player)
     {
         if (_playersResource[player] == null)

@@ -3,12 +3,12 @@ namespace Dominoes;
 
 public class Boneyard
 {
-    public List<List<int>>? tilesOnBoneyard;
+    private List<List<int>>? _tilesOnBoneyard;
     private int _totalSide;
 
     public Boneyard(int totalSide)
     {
-        tilesOnBoneyard = new List<List<int>>();
+        _tilesOnBoneyard = new List<List<int>>();
         _totalSide = totalSide;
         CreateDominoTiles();
         ShuffleTiles();
@@ -24,33 +24,37 @@ public class Boneyard
             for (int sideB = sideA; sideB <= _totalSide; sideB++)
             {
                 List<int> tile = new List<int> { sideB, sideA };
-                tilesOnBoneyard?.Add(tile);
+                _tilesOnBoneyard?.Add(tile);
             }
         }
     }
     public bool ShuffleTiles()
     {
-        if (tilesOnBoneyard?.Count >= 2)
+        if (_tilesOnBoneyard?.Count >= 2)
         {
             Random rondom = new Random();
-            int n = tilesOnBoneyard.Count;
+            int n = _tilesOnBoneyard.Count;
             while (n > 1)
             {
                 n--;
                 int randomIndex = rondom.Next(n + 1);
-                List<int> value = tilesOnBoneyard[randomIndex];
-                tilesOnBoneyard[randomIndex] = tilesOnBoneyard[n];
-                tilesOnBoneyard[n] = value;
+                List<int> value = _tilesOnBoneyard[randomIndex];
+                _tilesOnBoneyard[randomIndex] = _tilesOnBoneyard[n];
+                _tilesOnBoneyard[n] = value;
             }
             return true;
         }
         return false;
     }
+    public List<List<int>>? GetTilesOnBoneyard()
+    {
+        return _tilesOnBoneyard;
+    }
     public List<int>? GetTileData()
     {
-        if (tilesOnBoneyard?.Count > 0)
+        if (_tilesOnBoneyard?.Count > 0)
         {
-            List<int> data = tilesOnBoneyard[0];
+            List<int> data = _tilesOnBoneyard[0];
             return data;
         }
         else
@@ -60,13 +64,9 @@ public class Boneyard
     }
     public bool RemoveData(List<int> data)
     {
-        if (tilesOnBoneyard != null)
+        if (_tilesOnBoneyard != null)
         {
-            if (tilesOnBoneyard.Contains(data))
-            {
-                tilesOnBoneyard.Remove(data);
-                return true;
-            }
+            _tilesOnBoneyard.Remove(data);
             return false;
         }
         return false;

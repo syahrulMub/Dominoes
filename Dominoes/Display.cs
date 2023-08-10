@@ -1,5 +1,6 @@
-namespace Dominoes;
 using System.Collections.Generic;
+using Dominoes;
+namespace DisplayDominoes;
 public class Display
 {
     public static void DisplayPlayerTiles(List<Tile> tiles)
@@ -12,7 +13,7 @@ public class Display
         }
         Console.WriteLine();
     }
-    public static void DrawBoard(Board board, List<Tile> tilesHorizontal, List<Tile> tilesVertical)
+    public static void DrawBoard(IBoard board, List<Tile> tilesHorizontal, List<Tile> tilesVertical)
     {
         int cellSize = 5;
         int boardSize = board.GetBoardSize();

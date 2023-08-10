@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using System;
 using Dominoes;
+using DisplayDominoes;
 
 class Program
 {
@@ -17,11 +17,11 @@ class Program
 
         IPlayer player3 = new Player();
         player3.SetID(411);
-        player3.SetName("oziel");
+        player3.SetName("ozil");
 
 
-        Boneyard boneyard = new Boneyard(7);
-        Board board = new Board();
+        Boneyard boneyard = new Boneyard(6);
+        IBoard board = new Board();
         board.SetBoardSize(17);
 
         game1.AddBondyard(boneyard);
@@ -30,11 +30,9 @@ class Program
         game1.AddPlayer(player2);
         game1.AddPlayer(player3);
 
-        // Display.DisplayPlayerTiles(player1Tiles);
-        // Display.DisplayPlayerTiles(player2Tiles);
-        game1.GenerateTiles(player1, 12);
-        game1.GenerateTiles(player2, 12);
-        game1.GenerateTiles(player3, 12);
+        game1.GenerateTiles(player1, 5);
+        game1.GenerateTiles(player2, 5);
+        game1.GenerateTiles(player3, 5);
 
         Console.WriteLine("=====Game Start=====");
         game1.SetCurrentPlayer(0);
@@ -49,10 +47,9 @@ class Program
             Console.WriteLine($"Now is {game1.GetCurrentPlayer().GetName()} Turn");
             Console.WriteLine("=========================================\n");
             Display.DisplayPlayerTiles(game1.GetPlayerTiles(game1.GetCurrentPlayer()));
-            bool validInput = false;
             if (!game1.ValidMove(game1.GetCurrentPlayer()))
             {
-                if (boneyard.tilesOnBoneyard.Count != 0)
+                if (boneyard.GetTilesOnBoneyard()?.Count != 0)
                 {
                     Console.WriteLine("you did't have same card");
                     Console.WriteLine("please pick card on boneyard");
@@ -62,7 +59,7 @@ class Program
                     game1.MoveToNextPlayer();
 
                 }
-                else if (boneyard.tilesOnBoneyard.Count == 0)
+                else if (boneyard.GetTilesOnBoneyard()?.Count == 0)
                 {
                     Console.WriteLine("you did't have same card");
                     Console.WriteLine("All tiles in boneyard already taken");
@@ -74,7 +71,17 @@ class Program
             else if (game1.ValidMove(game1.GetCurrentPlayer()))
             {
                 Console.Write("Enter the tile by index (from 0) to place your tile on board : ");
-                int setTilesOnBoard = int.Parse(Console.ReadLine());
+                int setTilesOnBoard;
+                do
+                {
+                    setTilesOnBoard = int.Parse(Console.ReadLine());
+                    if (setTilesOnBoard < 0 || setTilesOnBoard >= game1.GetPlayerTiles(game1.GetCurrentPlayer()).Count)
+                    {
+                        Console.WriteLine("invalid index, please input valid index");
+                    }
+
+                }
+                while (setTilesOnBoard < 0 || setTilesOnBoard >= game1.GetPlayerTiles(game1.GetCurrentPlayer()).Count);
 
                 Console.WriteLine("Choose placement direction:");
                 Console.WriteLine("1. Left");
@@ -87,36 +94,30 @@ class Program
                 Tile selectedTile = game1.GetPlayerTiles(game1.GetCurrentPlayer())[setTilesOnBoard];
                 if (placementChoice == 1)
                 {
-                    if (game1.MakeMove(selectedTile, 1))
-                    {
-                        validInput = true;
-                    }
+                    game1.MakeMove(selectedTile, 1);
+
                 }
                 else if (placementChoice == 2)
                 {
-                    if (game1.MakeMove(selectedTile, 2))
-                    {
-                        validInput = true;
-                    }
+                    game1.MakeMove(selectedTile, 2);
+
+
                 }
                 else if (placementChoice == 3)
                 {
-                    if (game1.MakeMove(selectedTile, 3))
-                    {
-                        validInput = true;
-                    }
+                    game1.MakeMove(selectedTile, 3);
+
                 }
                 else if (placementChoice == 4)
                 {
-                    if (game1.MakeMove(selectedTile, 4))
-                    {
-                        validInput = true;
-                    }
+                    game1.MakeMove(selectedTile, 4);
+
                 }
                 else
                 {
-                    Console.WriteLine("invalid choice please enter a valid option");
+                    Console.WriteLine("invalid choice, please enter a valid option");
                 }
+                Console.ReadKey();
             }
         }
     }
