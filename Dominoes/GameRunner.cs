@@ -153,28 +153,7 @@ public partial class GameRunner
     {
         return _verticalTileOnBoard;
     }
-    public bool IsEnded()
-    {
-        if (_board == null || _players == null || _playersResource == null)
-        {
-            return false;
-        }
-        if (GameEndWithZeroTile())
-        {
-            return true;
-        }
-        if (_boneyard.GetTilesOnBoneyard()?.Count == 0 && _validSideTiles.Count >= 2)
-        {
-            if (GameEndWithNoSameTiles(_validSideTiles[0]) && GameEndWithNoSameTiles(_validSideTiles[1])
-            && GameEndWithNoSameTiles(_validSideTiles[2]) && GameEndWithNoSameTiles(_validSideTiles[3]))
-            {
-                return true;
-            }
-            return false;
-        }
-        return false;
-    }
-    private bool GameEndWithZeroTile()
+    public bool GameEndWithZeroTile()
     {
         foreach (var playerTile in _playersResource.Values)
         {
@@ -248,19 +227,5 @@ public partial class GameRunner
             }
         }
         return false;
-    }
-    public int PlayerTileCount(IPlayer player)
-    {
-        if (_playersResource[player] == null)
-        {
-            return 0;
-        }
-        int hasil = 0;
-        foreach (var tile in _playersResource[player])
-        {
-            hasil += tile.GetTileSideA();
-            hasil += tile.GetTileSideB();
-        }
-        return hasil;
     }
 }

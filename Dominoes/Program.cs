@@ -7,6 +7,9 @@ class Program
     public static void Main()
     {
         GameRunner game1 = new GameRunner();
+
+        game1.gameEnded += handleGameEnded;
+
         IPlayer player1 = new Player();
         player1.SetID(912);
         player1.SetName("syahrul");
@@ -22,7 +25,7 @@ class Program
 
         Boneyard boneyard = new Boneyard(6);
         IBoard board = new Board();
-        board.SetBoardSize(17);
+        board.SetBoardSize(12);
 
         game1.AddBondyard(boneyard);
         game1.AddBoard(board);
@@ -30,9 +33,9 @@ class Program
         game1.AddPlayer(player2);
         game1.AddPlayer(player3);
 
-        game1.GenerateTiles(player1, 5);
-        game1.GenerateTiles(player2, 5);
-        game1.GenerateTiles(player3, 5);
+        game1.GenerateTiles(player1, 2);
+        game1.GenerateTiles(player2, 2);
+        game1.GenerateTiles(player3, 2);
 
         Console.WriteLine("=====Game Start=====");
         game1.SetCurrentPlayer(0);
@@ -119,6 +122,18 @@ class Program
                 }
                 Console.ReadKey();
             }
+        }
+        void handleGameEnded(object? sender, EventArgs e)
+        {
+            Console.WriteLine("Game Has Ended");
+            Console.WriteLine("==============");
+            int ranking = 1;
+            foreach (var player in game1.GetLeaderBoard())
+            {
+                Console.WriteLine($"{ranking}. {player.Key.GetName()}\ttotal tile on hand : {player.Value}");
+                ranking++;
+            }
+            Console.WriteLine("==============");
         }
     }
 }
