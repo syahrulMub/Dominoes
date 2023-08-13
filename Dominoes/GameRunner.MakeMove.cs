@@ -242,7 +242,7 @@ public partial class GameRunner
 
         if (thisTile.GetTileSideA() == _validSideTiles[3])
         {
-            thisTile.SetTilePosition(TopTilePosX, TopTilePosY + 1);
+            thisTile.SetTilePosition(TopTilePosX, TopTilePosY - 1);
             _validSideTiles[3] = thisTile.GetTileSideB();
             // thisTile.FlipTiles();
             _verticalTileOnBoard.Add(thisTile);
@@ -250,7 +250,7 @@ public partial class GameRunner
         }
         else if (thisTile.GetTileSideB() == _validSideTiles[3])
         {
-            thisTile.SetTilePosition(TopTilePosX, TopTilePosY + 1);
+            thisTile.SetTilePosition(TopTilePosX, TopTilePosY - 1);
             _validSideTiles[3] = thisTile.GetTileSideA();
             _verticalTileOnBoard.Add(thisTile);
             return true;
@@ -263,14 +263,14 @@ public partial class GameRunner
         int buttomTilePosY = _verticalTileOnBoard[0].GetTilePosition().GetPosY();
         if (thisTile.GetTileSideA() == _validSideTiles[2])
         {
-            thisTile.SetTilePosition(buttomTilePosX, buttomTilePosY - 1);
+            thisTile.SetTilePosition(buttomTilePosX, buttomTilePosY + 1);
             _validSideTiles[2] = thisTile.GetTileSideB();
             _verticalTileOnBoard.Insert(0, thisTile);
             return true;
         }
         else if (thisTile.GetTileSideB() == _validSideTiles[2])
         {
-            thisTile.SetTilePosition(buttomTilePosX, buttomTilePosY - 1);
+            thisTile.SetTilePosition(buttomTilePosX, buttomTilePosY + 1);
             _validSideTiles[2] = thisTile.GetTileSideA();
             // thisTile.FlipTiles();
             _verticalTileOnBoard.Insert(0, thisTile);

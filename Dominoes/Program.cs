@@ -1,11 +1,23 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using NLog;
+using NLog.Config;
 using Dominoes;
 using DisplayDominoes;
 
 class Program
 {
-    public static void Main()
+    [Obsolete]
+    public static async Task Main()
     {
+        var currentDirectory = Directory.GetCurrentDirectory();
+        var nlogConfigPath = Path.Combine(currentDirectory, "nlog.config");
+        LogManager.LoadConfiguration(nlogConfigPath);
+
+
+        var logger = LogManager.GetCurrentClassLogger();
+
+        logger.Info("program info");
         GameRunner game1 = new GameRunner();
 
         game1.gameEnded += handleGameEnded;
@@ -23,7 +35,6 @@ class Program
         IPlayer player3 = new Player();
         player3.SetID(411);
         player3.SetName("mesut");
-
 
         Boneyard boneyard = new Boneyard(6);
         IBoard board = new Board();
@@ -65,7 +76,14 @@ class Program
             game1.GetPlayerTiles(player2);
             game1.GetPlayerTiles(player3);
             Console.Clear();
-            Display.DrawBoard(board, game1.GetTileOnBoard(), game1.GetTileVerticalOnBoard());
+            Console.Write("waiting for validate turn and create board ");
+            await Task.Delay(1000);
+            Console.Write(". ");
+            await Task.Delay(1000);
+            Console.Write(". ");
+            await Task.Delay(1000);
+            Console.WriteLine(". ");
+            await Task.Run(() => Display.DrawBoard(board, game1.GetTileOnBoard(), game1.GetTileVerticalOnBoard()));
             Console.WriteLine("=========================================");
             Console.WriteLine($"Now is {game1.GetCurrentPlayer().GetName()} Turn");
             Console.WriteLine("=========================================\n");
@@ -111,8 +129,8 @@ class Program
                 Console.WriteLine("Choose placement direction:");
                 Console.WriteLine("1. Left");
                 Console.WriteLine("2. Right");
-                Console.WriteLine("3. Top");
-                Console.WriteLine("4. buttom");
+                Console.WriteLine("3. buttom");
+                Console.WriteLine("4. Top");
                 Console.Write("Enter your choice: ");
                 int placementChoice = int.Parse(Console.ReadLine());
 
@@ -145,9 +163,6 @@ class Program
                 Console.ReadKey();
             }
         }
-        Display.DisplayPlayerTiles(game1.GetPlayerTiles(player1));
-        Display.DisplayPlayerTiles(game1.GetPlayerTiles(player2));
-        Display.DisplayPlayerTiles(game1.GetPlayerTiles(player3));
 
         void handleGameEnded(object? sender, EventArgs e)
         {

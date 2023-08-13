@@ -75,3 +75,5 @@ kekurangan
 12 / 08 / 2023
 1. update game mode, sekarang user dapat memilih mode draw atau block
 2. memperbaiki logika pada IsEnded bisa jadi vertical valid tidak terjadi untuk endgame
+3. menambah Task pada main program untuk simulasi validate turn dan input tile on board
+4. menambah nlog tapi belum di implemetasikan ke method

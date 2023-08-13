@@ -1,11 +1,17 @@
-using System.Linq;
 namespace Dominoes;
 
 public partial class GameRunner
 {
-    public event EventHandler gameEnded;
+    public event EventHandler? gameEnded;
 
-
+    /// <summary>
+    /// IsEnded method will return true if all condition of the game same as logic game end
+    /// </summary>
+    /// <returns></returns> 
+    /// <summary>
+    /// IsEnded also trigged event when game is ended and tell to subscriber that game was Ended
+    /// </summary>
+    /// <returns></returns>
     public bool IsEnded()
     {
         if (_board == null || _players == null || _playersResource == null)
@@ -69,7 +75,7 @@ public partial class GameRunner
         leaderBoard.Sort((pair1, pair2) => pair1.Value.CompareTo(pair2.Value));
         return leaderBoard;
     }
-    public int PlayerTileCount(IPlayer player)
+    private int PlayerTileCount(IPlayer player)
     {
         if (_playersResource.TryGetValue(player, out List<Tile>? playerTiles))
         {

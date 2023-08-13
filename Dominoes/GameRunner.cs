@@ -42,7 +42,12 @@ public partial class GameRunner
         _tileOnBoard = new List<Tile>();
         _verticalTileOnBoard = new List<Tile>();
     }
-
+    /// <summary>
+    /// adding player to the dominoes game when player was created
+    /// adding player also add player with tile in dictionary _playerREsource
+    /// </summary>
+    /// <param name="player">player will have List of tile when adding to the game</param>
+    /// <returns></returns>
     public bool AddPlayer(IPlayer player)
     {
         if (player != null)
