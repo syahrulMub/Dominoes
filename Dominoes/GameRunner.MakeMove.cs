@@ -11,6 +11,7 @@ public partial class GameRunner
     /// <returns>true if valid move, false if invalid</returns>
     public bool MakeMove(Tile tile, int side)
     {
+        logger.Info($"{_currentPlayer.GetName()} place {tile} in {side}");
         List<Tile> currentPlayerTiles = _playersResource[_currentPlayer];
         if (_verticalTileOnBoard.Count == 0)
         {
@@ -214,6 +215,7 @@ public partial class GameRunner
     /// <returns>this method will not valid when tiles on board less than 3 and vertical in leftes and rightes position</returns>
     private bool ValidateTopAndButtomSide()
     {
+        logger.Info("game validating vertical valid tiles");
         if (_verticalTileOnBoard.Count == 0 && _tileOnBoard.Count >= 3)
         {
             foreach (var tile in _tileOnBoard)

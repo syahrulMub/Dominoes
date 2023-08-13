@@ -17,7 +17,6 @@ class Program
 
         var logger = LogManager.GetCurrentClassLogger();
 
-        logger.Info("program info");
         GameRunner game1 = new GameRunner();
 
         game1.gameEnded += handleGameEnded;

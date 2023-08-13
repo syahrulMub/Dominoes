@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using NLog;
 namespace Dominoes;
 
 public partial class GameRunner
 {
+    private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
     //variabel that game runner needed
     private List<IPlayer> _players;
@@ -94,6 +96,7 @@ public partial class GameRunner
     /// <returns></returns>
     public bool GenerateTiles(IPlayer player, int count)
     {
+        logger.Info($"{player.GetName()} pick {count} tile from boneyard ");
         if (_boneyard.GetTilesOnBoneyard()?.Count >= count && _playersResource != null)
         {
             for (int i = 0; i < count; i++)
@@ -216,6 +219,7 @@ public partial class GameRunner
     /// <returns>false if all tile did't have valid number with valid side</returns>
     public bool ValidMove(IPlayer player)
     {
+        logger.Info("game checking player tile to for they move");
         foreach (var thisTile in _playersResource[player])
         {
             if (_tileOnBoard.Count == 0)
@@ -242,6 +246,7 @@ public partial class GameRunner
                 }
             }
         }
+        logger.Info("player did't have valid tile for move");
         return false;
     }
 }

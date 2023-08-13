@@ -20,6 +20,7 @@ public partial class GameRunner
         }
         if (GameEndWithZeroTile())
         {
+            logger.Info("game end with zero tile on one player");
             gameEnded?.Invoke(this, EventArgs.Empty);
             return true;
         }
@@ -31,12 +32,14 @@ public partial class GameRunner
                 {
                     if (GameEndWithNoSameTiles(_validSideTiles[2]) && GameEndWithNoSameTiles(_validSideTiles[3]))
                     {
+                        logger.Info("block mode : game end with no valid vertical side");
                         gameEnded?.Invoke(this, EventArgs.Empty);
                         return true;
                     }
                 }
                 else
                 {
+                    logger.Info(" block mode : game end with vertical vile available but no player have valid tile");
                     gameEnded?.Invoke(this, EventArgs.Empty);
                     return true;
                 }
@@ -48,6 +51,7 @@ public partial class GameRunner
             {
                 if (_verticalTileOnBoard.Count != 0)
                 {
+                    logger.Info("draw mode : game end with no valid vertical side");
                     if (GameEndWithNoSameTiles(_validSideTiles[2]) && GameEndWithNoSameTiles(_validSideTiles[3]))
                     {
                         gameEnded?.Invoke(this, EventArgs.Empty);
@@ -56,6 +60,7 @@ public partial class GameRunner
                 }
                 else
                 {
+                    logger.Info(" draw mode : game end with vertical vile available but no player have valid tile");
                     gameEnded?.Invoke(this, EventArgs.Empty);
                     return true;
                 }
