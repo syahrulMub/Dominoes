@@ -70,4 +70,37 @@ public class GameRunnerTest
         Assert.IsTrue(result);
 
     }
+    [Test]
+    public void TestBlockModeGame()
+    {
+        //arrage
+        IPlayer player1 = new Player();
+        IPlayer player2 = new Player();
+        Boneyard boneyard = new(6);
+        _gameRunner.AddPlayer(player1);
+        _gameRunner.AddPlayer(player2);
+        _gameRunner.AddBondyard(boneyard);
+
+
+
+        Tile tile1 = new Tile(3, 4);
+        Tile tile2 = new Tile(2, 5);
+        Tile tile3 = new Tile(1, 1);
+
+
+        //act
+        _gameRunner.SetCurrentPlayer(0);
+        _gameRunner.SetGameMode(GameMode.blockMode);
+
+        _gameRunner.GetPlayerTiles(player1).Add(tile1);
+        _gameRunner.GetPlayerTiles(player1).Add(tile2);
+        _gameRunner.GetPlayerTiles(player2).Add(tile3);
+
+        _gameRunner.MakeMove(tile1, 1);
+
+
+        //assert
+        Assert.IsTrue(_gameRunner.IsEnded());
+
+    }
 }

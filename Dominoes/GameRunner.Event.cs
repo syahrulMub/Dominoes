@@ -14,18 +14,46 @@ public partial class GameRunner
         }
         if (GameEndWithZeroTile())
         {
-            gameEnded?.Invoke(this, new EventArgs());
+            gameEnded?.Invoke(this, EventArgs.Empty);
             return true;
+        }
+        if (_gameMode == GameMode.blockMode && _validSideTiles.Count >= 2)
+        {
+            if (GameEndWithNoSameTiles(_validSideTiles[0]) && GameEndWithNoSameTiles(_validSideTiles[1]))
+            {
+                if (_verticalTileOnBoard.Count != 0)
+                {
+                    if (GameEndWithNoSameTiles(_validSideTiles[2]) && GameEndWithNoSameTiles(_validSideTiles[3]))
+                    {
+                        gameEnded?.Invoke(this, EventArgs.Empty);
+                        return true;
+                    }
+                }
+                else
+                {
+                    gameEnded?.Invoke(this, EventArgs.Empty);
+                    return true;
+                }
+            }
         }
         if (_boneyard.GetTilesOnBoneyard()?.Count == 0 && _validSideTiles.Count >= 2)
         {
-            if (GameEndWithNoSameTiles(_validSideTiles[0]) && GameEndWithNoSameTiles(_validSideTiles[1])
-            && GameEndWithNoSameTiles(_validSideTiles[2]) && GameEndWithNoSameTiles(_validSideTiles[3]))
+            if (GameEndWithNoSameTiles(_validSideTiles[0]) && GameEndWithNoSameTiles(_validSideTiles[1]))
             {
-                gameEnded?.Invoke(this, new EventArgs());
-                return true;
+                if (_verticalTileOnBoard.Count != 0)
+                {
+                    if (GameEndWithNoSameTiles(_validSideTiles[2]) && GameEndWithNoSameTiles(_validSideTiles[3]))
+                    {
+                        gameEnded?.Invoke(this, EventArgs.Empty);
+                        return true;
+                    }
+                }
+                else
+                {
+                    gameEnded?.Invoke(this, EventArgs.Empty);
+                    return true;
+                }
             }
-            return false;
         }
         return false;
     }

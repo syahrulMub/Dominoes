@@ -10,6 +10,7 @@ public partial class GameRunner
     private Dictionary<IPlayer, List<Tile>> _playersResource;
     private IBoard _board;
     private Boneyard _boneyard;
+    private GameMode _gameMode;
     private IPlayer? _currentPlayer;
     private List<int> _validSideTiles;
     private List<Tile> _tileOnBoard;
@@ -21,8 +22,9 @@ public partial class GameRunner
         _players = new List<IPlayer>();
         _playersResource = new Dictionary<IPlayer, List<Tile>>();
         _board = new Board();
-        _currentPlayer = null;
         _boneyard = new Boneyard();
+        _gameMode = GameMode.drawMode;
+        _currentPlayer = null;
         _validSideTiles = new List<int>();
         _tileOnBoard = new List<Tile>();
         _verticalTileOnBoard = new List<Tile>();
@@ -35,6 +37,7 @@ public partial class GameRunner
         _playersResource.Add(player, tile);
         _board = new Board();
         _boneyard = new Boneyard();
+        _gameMode = GameMode.drawMode;
         _validSideTiles = new List<int>();
         _tileOnBoard = new List<Tile>();
         _verticalTileOnBoard = new List<Tile>();
@@ -69,6 +72,14 @@ public partial class GameRunner
             return true;
         }
         return false;
+    }
+    public void SetGameMode(GameMode gameMode)
+    {
+        _gameMode = gameMode;
+    }
+    public GameMode GetGameMode()
+    {
+        return _gameMode;
     }
     /// <summary>
     /// generating tile from bone yard if it available

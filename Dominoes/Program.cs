@@ -9,6 +9,8 @@ class Program
         GameRunner game1 = new GameRunner();
 
         game1.gameEnded += handleGameEnded;
+        game1.gameEnded += PlayerWin;
+        game1.gameEnded += PlayerLose;
 
         IPlayer player1 = new Player();
         player1.SetID(912);
@@ -20,7 +22,7 @@ class Program
 
         IPlayer player3 = new Player();
         player3.SetID(411);
-        player3.SetName("ozil");
+        player3.SetName("mesut");
 
 
         Boneyard boneyard = new Boneyard(6);
@@ -33,9 +35,27 @@ class Program
         game1.AddPlayer(player2);
         game1.AddPlayer(player3);
 
-        game1.GenerateTiles(player1, 2);
-        game1.GenerateTiles(player2, 2);
-        game1.GenerateTiles(player3, 2);
+        game1.GenerateTiles(player1, 7);
+        game1.GenerateTiles(player2, 7);
+        game1.GenerateTiles(player3, 7);
+        Console.WriteLine("Set your game mode : \n1. Draw Mode\n2. Block Mode");
+        int pickGameMode;
+        do
+        {
+            pickGameMode = int.Parse(Console.ReadLine());
+            if (pickGameMode != 1 || pickGameMode != 2)
+            {
+                Console.WriteLine("please enter pick 1 or 2");
+            }
+        } while (pickGameMode != 1 && pickGameMode != 2);
+        if (pickGameMode == 1)
+        {
+            game1.SetGameMode(GameMode.drawMode);
+        }
+        else if (pickGameMode == 2)
+        {
+            game1.SetGameMode(GameMode.blockMode);
+        }
 
         Console.WriteLine("=====Game Start=====");
         game1.SetCurrentPlayer(0);
@@ -52,7 +72,7 @@ class Program
             Display.DisplayPlayerTiles(game1.GetPlayerTiles(game1.GetCurrentPlayer()));
             if (!game1.ValidMove(game1.GetCurrentPlayer()))
             {
-                if (boneyard.GetTilesOnBoneyard()?.Count != 0)
+                if (boneyard.GetTilesOnBoneyard()?.Count != 0 && game1.GetGameMode() == GameMode.drawMode)
                 {
                     Console.WriteLine("you did't have same card");
                     Console.WriteLine("please pick card on boneyard");
@@ -60,12 +80,14 @@ class Program
                     Console.Write("press any key to move next player");
                     Console.ReadKey();
                     game1.MoveToNextPlayer();
-
                 }
-                else if (boneyard.GetTilesOnBoneyard()?.Count == 0)
+                else if (boneyard.GetTilesOnBoneyard()?.Count == 0 || game1.GetGameMode() == GameMode.blockMode)
                 {
                     Console.WriteLine("you did't have same card");
-                    Console.WriteLine("All tiles in boneyard already taken");
+                    if (game1.GetGameMode() == GameMode.drawMode)
+                    {
+                        Console.WriteLine("All tiles in boneyard already taken");
+                    }
                     Console.Write("press any key to move next player");
                     Console.ReadKey();
                     game1.MoveToNextPlayer();
@@ -123,9 +145,13 @@ class Program
                 Console.ReadKey();
             }
         }
+        Display.DisplayPlayerTiles(game1.GetPlayerTiles(player1));
+        Display.DisplayPlayerTiles(game1.GetPlayerTiles(player2));
+        Display.DisplayPlayerTiles(game1.GetPlayerTiles(player3));
+
         void handleGameEnded(object? sender, EventArgs e)
         {
-            Console.WriteLine("Game Has Ended");
+            Console.WriteLine("Game was Ended");
             Console.WriteLine("==============");
             int ranking = 1;
             foreach (var player in game1.GetLeaderBoard())
@@ -135,5 +161,20 @@ class Program
             }
             Console.WriteLine("==============");
         }
+        void PlayerWin(object? sender, EventArgs e)
+        {
+            GameStatus status = GameStatus.winTheGame;
+            IPlayer playerWin = game1.GetLeaderBoard()[0].Key;
+            Console.WriteLine($"\nCongratulation {playerWin.GetName()}!!! you {status}\n");
+        }
+        void PlayerLose(object? sender, EventArgs e)
+        {
+            GameStatus status = GameStatus.loseTheGame;
+            for (int i = 1; i < game1.GetLeaderBoard().Count; i++)
+            {
+                Console.WriteLine($"{game1.GetLeaderBoard()[i].Key.GetName()}, you {status}");
+            }
+        }
+
     }
 }

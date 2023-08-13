@@ -6,17 +6,14 @@ public enum TileOrientation
     horizontal
 }
 
-public enum TilePoint
-{
-    bottomSide,
-    middle,
-    topSide
-}
-
 public enum GameStatus
 {
     winTheGame,
-    loseTheGame,
-    onGoing,
+    loseTheGame
+}
+public enum GameMode
+{
+    blockMode,
+    drawMode
 }
 

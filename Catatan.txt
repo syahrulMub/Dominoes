@@ -71,3 +71,7 @@ return player menjadi IPlayer? // all reference type that have interface set Int
 kekurangan
 1. Nlog test belum bisa
 2. evaluasi method MakeMove dengan parameter 3 dan 4, terbalik
+
+12 / 08 / 2023
+1. update game mode, sekarang user dapat memilih mode draw atau block
+2. memperbaiki logika pada IsEnded bisa jadi vertical valid tidak terjadi untuk endgame
