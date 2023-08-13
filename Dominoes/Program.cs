@@ -4,6 +4,10 @@ using NLog;
 using NLog.Config;
 using Dominoes;
 using DisplayDominoes;
+using System.Text.Json.Serialization;
+using System.IO;
+using System.Text.Json;
+using System.Runtime.Serialization.Json;
 
 class Program
 {
@@ -45,9 +49,9 @@ class Program
         game1.AddPlayer(player2);
         game1.AddPlayer(player3);
 
-        game1.GenerateTiles(player1, 7);
-        game1.GenerateTiles(player2, 7);
-        game1.GenerateTiles(player3, 7);
+        game1.GenerateTiles(player1, 2);
+        game1.GenerateTiles(player2, 2);
+        game1.GenerateTiles(player3, 2);
         Console.WriteLine("Set your game mode : \n1. Draw Mode\n2. Block Mode");
         int pickGameMode;
         do
@@ -162,6 +166,16 @@ class Program
                 Console.ReadKey();
             }
         }
+        /// <summary>
+        /// adding leaderboard history to json file
+        /// </summary>
+        /// <returns></returns>
+        //still exception with keyvaluepair connot serialize
+        // var leaderBoard = new DataContractJsonSerializer(typeof(List<KeyValuePair<IPlayer, int>>));
+        // using (FileStream stream = new FileStream("History.json", FileMode.OpenOrCreate))
+        // {
+        //     leaderBoard.WriteObject(stream, game1.GetLeaderBoard());
+        // }
 
         void handleGameEnded(object? sender, EventArgs e)
         {
